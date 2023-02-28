@@ -14,18 +14,5 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppTheme.FullScreenDialog" parent="Theme.Tasky">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">#00000000</item>
-        <item name="android:fitsSystemWindows">true</item>
-    </style>
-
 
 </resources>
