@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="InputField">
+        <attr name="lines" format="integer" />
+        <attr name="hint" format="string" />
+        <attr name="hintTextAllCaps" format="boolean" />
+        <attr name="inputText" format="string" />
+        <attr name="hintColor" format="color" />
+        <attr name="inputTextColor" format="color" />
+        <attr name="highlightColor" format="color" />
+        <attr name="drawableRight" format="reference" />
+        <attr name="drawableBackground" format="reference" />
+        <attr name="isMandatoryField" format="boolean" />
+        <attr name="hintTextSize" format="integer" />
+        <attr name="inputLength" format="integer" />
+        <attr name="isEditable" format="boolean" />
+        <attr name="isNote" format="boolean" />
+        <attr name="showMandatoryIcon" format="boolean" />
+        <attr name="android:inputType" />
+        <attr name="onFocusSelectAll" format="boolean" type="boolean" />
+        <attr name="editTextBackground" format="reference" type="drawable" />
+        <attr name="isReadOnlyMode" format="boolean" type="boolean" />
+        <attr name="readOnlyModeInputTextColor" format="color" type="color" />
+        <attr name="readOnlyModeHintColor" format="color" type="color" />
+        <attr name="readOnlyModeHighlightColor" format="color" type="color" />
+        <attr name="etBackground" format="color" type="color" />
+        <attr name="etFocusedBackground" format="reference" type="drawable" />
+        <attr name="maxLength" format="integer" />
+        <attr name="maxLines" format="integer" />
+        <attr name="textSizes" format="integer" />
+    </declare-styleable>
+</resources>
