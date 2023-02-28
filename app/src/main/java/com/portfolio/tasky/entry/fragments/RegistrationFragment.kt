@@ -5,14 +5,9 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.transition.Slide
 import com.portfolio.tasky.BaseFragment
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
-
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 
 class RegistrationFragment : BaseFragment() {
     private var viewBinding: LayoutRegistrationBinding? = null

@@ -7,7 +7,6 @@ import com.portfolio.tasky.BaseFragment
 import com.portfolio.tasky.R
 import com.portfolio.tasky.entry.fragments.LoginFragment
 
-
 class EntryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

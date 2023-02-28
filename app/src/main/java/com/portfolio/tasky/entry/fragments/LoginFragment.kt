@@ -2,14 +2,12 @@ package com.portfolio.tasky.entry.fragments
 
 import android.os.Bundle
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.transition.Slide
 import com.portfolio.tasky.BaseFragment
 import com.portfolio.tasky.databinding.LayoutLoginBinding
-
 
 class LoginFragment : BaseFragment() {
     private var viewBinding: LayoutLoginBinding? = null
