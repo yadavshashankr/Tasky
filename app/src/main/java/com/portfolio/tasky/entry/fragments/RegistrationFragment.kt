@@ -5,11 +5,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.transition.Slide
-import com.portfolio.tasky.BaseFragment
+import com.portfolio.tasky.R
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
+import com.portfolio.tasky.entry.FragmentInflater
+import com.portfolio.tasky.entry.FragmentInflaterImpl
 
-class RegistrationFragment : BaseFragment() {
+class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     private var viewBinding: LayoutRegistrationBinding? = null
 
 
@@ -26,9 +29,14 @@ class RegistrationFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding?.tvReg?.setOnClickListener {
-            val loginFragment = LoginFragment.getInstance()
-            inflateFragment(loginFragment)
+            startLoginFragment()
         }
+    }
+
+    private fun startLoginFragment() {
+        setFragmentManager(activity?.supportFragmentManager!!)
+        val loginFragment = LoginFragment.getInstance()
+        inflateFragment(loginFragment, R.id.fragment_container)
     }
 
     companion object {
@@ -36,8 +44,8 @@ class RegistrationFragment : BaseFragment() {
         fun getInstance(): RegistrationFragment {
             val registrationFragment = RegistrationFragment()
             registrationFragment.apply {
-                enterTransition = Slide(Gravity.BOTTOM)
-                exitTransition = Slide(Gravity.BOTTOM)
+                enterTransition = Slide(Gravity.TOP)
+                exitTransition = Slide(Gravity.TOP)
             }
             return registrationFragment
         }

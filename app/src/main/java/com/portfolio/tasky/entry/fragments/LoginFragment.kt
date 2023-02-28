@@ -5,11 +5,14 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.transition.Slide
-import com.portfolio.tasky.BaseFragment
+import com.portfolio.tasky.R
 import com.portfolio.tasky.databinding.LayoutLoginBinding
+import com.portfolio.tasky.entry.FragmentInflater
+import com.portfolio.tasky.entry.FragmentInflaterImpl
 
-class LoginFragment : BaseFragment() {
+class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     private var viewBinding: LayoutLoginBinding? = null
 
     override fun onCreateView(
@@ -25,9 +28,14 @@ class LoginFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding?.tvLog?.setOnClickListener {
-            val loginFragment = RegistrationFragment.getInstance()
-            inflateFragment(loginFragment)
+            openRegistrationFragment()
         }
+    }
+
+    private fun openRegistrationFragment() {
+        setFragmentManager(activity?.supportFragmentManager!!)
+        val registrationFragment = RegistrationFragment.getInstance()
+        inflateFragment(registrationFragment, R.id.fragment_container)
     }
 
     companion object {
