@@ -12,7 +12,7 @@ class EntryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry)
-        val loginFragment = LoginFragment.getInstance("test", "test")
+        val loginFragment = LoginFragment.getInstance()
         inflateFragment(loginFragment)
     }
 
