@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="valid"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="hint"
+            type="java.lang.String" />
+
+        <variable
+            name="label2"
+            type="java.lang.String" />
+
+        <import type="android.view.View" />
+    </data>
+<androidx.appcompat.widget.AppCompatEditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@{valid ? @drawable/input_field_error : @drawable/input_field_background_selector}"
+    android:drawableEnd="@{valid ? @drawable/ic_green_tick : null}"
+    android:hint="@{hint}"
+    android:fontFamily="@font/inter_regular_400"
+    android:textColorHint="@color/grey_4b2"
+    android:textColor="@color/grey_d5a"
+    android:inputType="textPassword"
+    tools:background="@drawable/input_field_error"
+    tools:hint="@string/email_address"
+    tools:drawableEnd="@drawable/ic_green_tick">
+
+</androidx.appcompat.widget.AppCompatEditText>
+</layout>
