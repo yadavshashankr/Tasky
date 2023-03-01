@@ -15,7 +15,7 @@ import com.portfolio.tasky.FragmentInflater
 import com.portfolio.tasky.FragmentInflaterImpl
 
 class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
-    private var viewBinding: LayoutLoginBinding? = null
+    private lateinit var viewBinding: LayoutLoginBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,13 +23,13 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
         savedInstanceState: Bundle?
     ): View {
         viewBinding = LayoutLoginBinding.inflate(inflater, container, false)
-        return viewBinding?.root as View
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding?.btnLogin?.setOnClickListener {
+        viewBinding.btnLogin.setOnClickListener {
             openRegistrationFragment()
         }
     }

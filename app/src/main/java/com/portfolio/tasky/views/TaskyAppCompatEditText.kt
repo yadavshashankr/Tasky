@@ -52,11 +52,11 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
         addView(viewBinding.root)
 
         editText = viewBinding.etInput
-        val ta: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.EditTextInputField)
-        error = ta.getBoolean(R.styleable.EditTextInputField_error, false)
-        drawableLast = ta.getDrawable(R.styleable.EditTextInputField_drawableLast)
-        inputType = ta.getInt(R.styleable.EditTextInputField_inputType, InputType.TYPE_CLASS_TEXT)
-        hint = ta.getString(R.styleable.EditTextInputField_hint)
-        ta.recycle()
+        val typedArray: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.EditTextInputField)
+        error = typedArray.getBoolean(R.styleable.EditTextInputField_error, false)
+        drawableLast = typedArray.getDrawable(R.styleable.EditTextInputField_drawableLast)
+        inputType = typedArray.getInt(R.styleable.EditTextInputField_inputType, InputType.TYPE_CLASS_TEXT)
+        hint = typedArray.getString(R.styleable.EditTextInputField_hint)
+        typedArray.recycle()
     }
 }
