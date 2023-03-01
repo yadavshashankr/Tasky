@@ -1,4 +1,4 @@
-package com.portfolio.tasky.entry
+package com.portfolio.tasky
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

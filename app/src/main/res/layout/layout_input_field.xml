@@ -5,31 +5,41 @@
     <data>
 
         <variable
-            name="valid"
-            type="java.lang.Boolean" />
-
-        <variable
             name="hint"
             type="java.lang.String" />
 
         <variable
-            name="label2"
-            type="java.lang.String" />
+            name="inputType"
+            type="java.lang.Integer" />
 
-        <import type="android.view.View" />
+        <variable
+            name="valid"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="error"
+            type="java.lang.Boolean" />
+
+        <variable
+            name="drawableLast"
+            type="android.graphics.drawable.Drawable" />
+
+        <import type="android.text.InputType" />
+
     </data>
+
+
 <androidx.appcompat.widget.AppCompatEditText
+    android:id="@+id/et_input"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@{valid ? @drawable/input_field_error : @drawable/input_field_background_selector}"
-    android:drawableEnd="@{valid ? @drawable/ic_green_tick : null}"
-    android:hint="@{hint}"
+    android:background="@{error ? @drawable/input_field_error : @drawable/input_field_background_selector}"
+    android:drawableEnd="@{inputType.equals(InputType.TYPE_CLASS_TEXT) &amp;&amp; valid ? @drawable/ic_green_tick : inputType.equals(InputType.TYPE_TEXT_VARIATION_PASSWORD) ? @drawable/ic_password_dots : inputType.equals(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) ? @drawable/ic_password_text : drawableLast}"
     android:fontFamily="@font/inter_regular_400"
     android:textColorHint="@color/grey_4b2"
     android:textColor="@color/grey_d5a"
-    android:inputType="textPassword"
+    android:hint="@{hint}"
     tools:background="@drawable/input_field_error"
-    tools:hint="@string/email_address"
     tools:drawableEnd="@drawable/ic_green_tick">
 
 </androidx.appcompat.widget.AppCompatEditText>
