@@ -3,20 +3,30 @@ package com.portfolio.tasky.entry
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.portfolio.tasky.R
+import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
+import com.portfolio.tasky.*
+import com.portfolio.tasky.databinding.ActivityEntryBinding
 import com.portfolio.tasky.entry.fragments.LoginFragment
 
-class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl() {
+class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl() {
+    private var viewBinding: ActivityEntryBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_entry)
+        viewBinding = DataBindingUtil.setContentView(this, R.layout.activity_entry)
 
         startLoginFragment()
     }
 
     private fun startLoginFragment() {
+        setTitle(getString(R.string.welcome_back))
+
         setFragmentManager(supportFragmentManager)
         val loginFragment = LoginFragment.getInstance()
         inflateFragment(loginFragment, R.id.fragment_container)
+    }
+
+    fun setTitle(text: String){
+        setToolBarText(viewBinding?.toolbar as Toolbar, text)
     }
 }

@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.transition.Fade
 import androidx.transition.Slide
 import com.portfolio.tasky.R
 import com.portfolio.tasky.databinding.LayoutLoginBinding
-import com.portfolio.tasky.entry.FragmentInflater
-import com.portfolio.tasky.entry.FragmentInflaterImpl
+import com.portfolio.tasky.entry.EntryActivity
+import com.portfolio.tasky.FragmentInflater
+import com.portfolio.tasky.FragmentInflaterImpl
 
 class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     private var viewBinding: LayoutLoginBinding? = null
@@ -27,12 +29,14 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding?.tvLog?.setOnClickListener {
+        viewBinding?.btnLogin?.setOnClickListener {
             openRegistrationFragment()
         }
     }
 
     private fun openRegistrationFragment() {
+        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
+
         setFragmentManager(activity?.supportFragmentManager!!)
         val registrationFragment = RegistrationFragment.getInstance()
         inflateFragment(registrationFragment, R.id.fragment_container)
@@ -43,8 +47,8 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
         fun getInstance(): LoginFragment {
             val loginFragment = LoginFragment()
             loginFragment.apply {
-                enterTransition = Slide(Gravity.TOP)
-                exitTransition = Slide(Gravity.TOP)
+                enterTransition = Slide(Gravity.BOTTOM)
+                exitTransition = Fade(Fade.MODE_OUT)
             }
             return loginFragment
         }

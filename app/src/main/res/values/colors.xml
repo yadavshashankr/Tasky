@@ -11,8 +11,10 @@
     <color name="blue_6de">#B7C6DE</color>
     <color name="red_272">#FF7272</color>
     <color name="grey_4b2">#A1A4B2</color>
+    <color name="black_61c">#16161C</color>
 
     <color name="input_field_background_in">@color/grey_3f7</color>
     <color name="grey_d5a">#5C5D5A</color>
+    <color name="grey_3b3">#B3B3B3</color>
 
 </resources>

@@ -1,8 +1,7 @@
-package com.portfolio.tasky.entry
+package com.portfolio.tasky
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.portfolio.tasky.R
 
 class FragmentInflaterImpl : FragmentInflater {
     private lateinit var fragmentManager: FragmentManager

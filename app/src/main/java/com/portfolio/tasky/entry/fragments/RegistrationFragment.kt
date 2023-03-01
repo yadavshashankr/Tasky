@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.transition.Fade
 import androidx.transition.Slide
 import com.portfolio.tasky.R
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
-import com.portfolio.tasky.entry.FragmentInflater
-import com.portfolio.tasky.entry.FragmentInflaterImpl
+import com.portfolio.tasky.entry.EntryActivity
+import com.portfolio.tasky.FragmentInflater
+import com.portfolio.tasky.FragmentInflaterImpl
 
 class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     private var viewBinding: LayoutRegistrationBinding? = null
@@ -28,12 +30,14 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding?.tvReg?.setOnClickListener {
+        viewBinding?.btnReg?.setOnClickListener {
             startLoginFragment()
         }
     }
 
     private fun startLoginFragment() {
+        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
+
         setFragmentManager(activity?.supportFragmentManager!!)
         val loginFragment = LoginFragment.getInstance()
         inflateFragment(loginFragment, R.id.fragment_container)
@@ -44,8 +48,8 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         fun getInstance(): RegistrationFragment {
             val registrationFragment = RegistrationFragment()
             registrationFragment.apply {
-                enterTransition = Slide(Gravity.TOP)
-                exitTransition = Slide(Gravity.TOP)
+                enterTransition = Slide(Gravity.BOTTOM)
+                exitTransition = Fade(Fade.MODE_OUT)
             }
             return registrationFragment
         }
