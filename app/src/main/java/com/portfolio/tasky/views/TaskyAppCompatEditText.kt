@@ -23,9 +23,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
 
     lateinit var subLayout: LayoutInputFieldBinding
     private var error : Boolean = false
-    private var valid : Boolean = false
     private var isPassword : Boolean = false
-    private var wasPassword : Boolean = false
     private var drawableLast : Drawable? = null
     private lateinit var editText : AppCompatEditText
     private var inputType : Int = 0

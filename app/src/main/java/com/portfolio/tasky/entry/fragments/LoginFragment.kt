@@ -29,20 +29,26 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Fi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setFieldValidations()
-
         viewBinding.btnLogin.setOnClickListener {
             openRegistrationFragment()
         }
     }
-    private fun setFieldValidations() {
+    private fun setFieldValidations(loginFragment: LoginFragment?) {
         clearValidatorParams()
 
         val etEmail = viewBinding.etEmail.subLayout.etInput
-        etEmail.addTextChangedListener(TaskyValidationWatcherImpl(viewBinding.etEmail, LOGIN, this))
+        etEmail.addTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etEmail, LOGIN,
+                it
+            )
+        })
 
         val etPassword = viewBinding.etPassword.subLayout.etInput
-        etPassword.addTextChangedListener(TaskyValidationWatcherImpl(viewBinding.etPassword, LOGIN, this))
+        etPassword.addTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etPassword, LOGIN,
+                it
+            )
+        })
     }
 
     override fun fieldsValidated(valid: Boolean) {
@@ -63,6 +69,15 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Fi
         setFragmentManager(activity?.supportFragmentManager!!)
         val registrationFragment = RegistrationFragment.getInstance()
         inflateFragment(registrationFragment, R.id.fragment_container)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setFieldValidations(this)
+    }
+    override fun onStop() {
+        super.onStop()
+        setFieldValidations(null)
     }
 
     companion object {
