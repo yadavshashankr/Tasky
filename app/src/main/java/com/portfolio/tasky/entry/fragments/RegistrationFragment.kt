@@ -1,11 +1,13 @@
 package com.portfolio.tasky.entry.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.transition.Fade
 import androidx.transition.Slide
 import com.portfolio.tasky.*
@@ -58,6 +60,31 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
+    private fun removeFieldValidations(registrationFragment: RegistrationFragment?) {
+        clearValidatorParams()
+
+        val etName = viewBinding.etName.subLayout.etInput
+        etName.removeTextChangedListener(registrationFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etName, Constants.Companion.Entry.REGISTRATION,
+                it
+            )
+        })
+
+        val etEmail = viewBinding.etEmail.subLayout.etInput
+        etEmail.removeTextChangedListener(registrationFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etEmail, Constants.Companion.Entry.REGISTRATION,
+                it
+            )
+        })
+
+        val etPassword = viewBinding.etPassword.subLayout.etInput
+        etPassword.removeTextChangedListener(registrationFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etPassword, Constants.Companion.Entry.REGISTRATION,
+                it
+            )
+        })
+    }
+
 
     override fun fieldsValidated(valid: Boolean) {
         viewBinding.btnReg.isEnabled = valid
@@ -74,6 +101,9 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     private fun startLoginFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
 
+        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
+        removeFragment(this)
+
         setFragmentManager(activity?.supportFragmentManager!!)
         val loginFragment = LoginFragment.getInstance()
         inflateFragment(loginFragment, R.id.fragment_container)
@@ -82,21 +112,26 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     override fun onResume() {
         super.onResume()
         setFieldValidations(this)
+        Log.d("CALL_BACK_REGISTERED_REGISTRATION", "TRUE")
     }
-    override fun onStop() {
-        super.onStop()
-        setFieldValidations(null)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeFieldValidations(this)
+        Log.d("CALL_BACK_REGISTERED_REGISTRATION", "FALSE")
     }
 
     companion object {
+        private var registrationFragment : RegistrationFragment? = null
         @JvmStatic
         fun getInstance(): RegistrationFragment {
-            val registrationFragment = RegistrationFragment()
-            registrationFragment.apply {
+            if (registrationFragment == null){
+                registrationFragment = RegistrationFragment()
+            }
+            registrationFragment?.apply {
                 enterTransition = Slide(Gravity.BOTTOM)
                 exitTransition = Fade(Fade.MODE_OUT)
             }
-            return registrationFragment
+            return registrationFragment as RegistrationFragment
         }
     }
 }
