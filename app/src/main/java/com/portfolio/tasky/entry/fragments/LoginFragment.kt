@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.transition.Fade
 import androidx.transition.Slide
-import com.portfolio.tasky.R
+import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
-import com.portfolio.tasky.FragmentInflater
-import com.portfolio.tasky.FragmentInflaterImpl
+import com.portfolio.tasky.globals.Constants.Companion.Entry.LOGIN
+import com.portfolio.tasky.globals.DataUtils.Companion.Validators.clearValidatorParams
 
-class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
+class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), FieldsValidator {
     private lateinit var viewBinding: LayoutLoginBinding
 
     override fun onCreateView(
@@ -29,9 +29,32 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setFieldValidations()
+
         viewBinding.btnLogin.setOnClickListener {
             openRegistrationFragment()
         }
+    }
+    private fun setFieldValidations() {
+        clearValidatorParams()
+
+        val etEmail = viewBinding.etEmail.subLayout.etInput
+        etEmail.addTextChangedListener(TaskyValidationWatcherImpl(viewBinding.etEmail, LOGIN, this))
+
+        val etPassword = viewBinding.etPassword.subLayout.etInput
+        etPassword.addTextChangedListener(TaskyValidationWatcherImpl(viewBinding.etPassword, LOGIN, this))
+    }
+
+    override fun fieldsValidated(valid: Boolean) {
+        viewBinding.btnLogin.isEnabled = valid
+        valid.let {
+            if (it) {
+                viewBinding.etEmail.clearFocus()
+                viewBinding.etPassword.clearFocus()
+                viewBinding.btnLogin.requestFocus()
+            }
+        }
+
     }
 
     private fun openRegistrationFragment() {

@@ -3,6 +3,7 @@
 
     <declare-styleable name="EditTextInputField">
         <attr name="error" format="boolean" />
+        <attr name="isPassword" format="boolean" />
         <attr name="drawableLast" format="reference" type="drawable" />
         <attr name="inputType" format="integer"/>
         <attr name="hint" format="string" />
