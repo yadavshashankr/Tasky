@@ -112,12 +112,10 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     override fun onResume() {
         super.onResume()
         setFieldValidations(this)
-        Log.d("CALL_BACK_REGISTERED_REGISTRATION", "TRUE")
     }
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)
-        Log.d("CALL_BACK_REGISTERED_REGISTRATION", "FALSE")
     }
 
     companion object {

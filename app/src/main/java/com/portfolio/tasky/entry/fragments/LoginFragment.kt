@@ -96,12 +96,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Fi
     override fun onResume() {
         super.onResume()
         setFieldValidations(this)
-        Log.d("CALL_BACK_REGISTERED_LOGIN", "TRUE")
     }
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)
-        Log.d("CALL_BACK_REGISTERED_LOGIN", "FALSE")
     }
 
     companion object {
