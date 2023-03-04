@@ -4,14 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.portfolio.tasky.usecases.EmailPatternValidator
-import com.portfolio.tasky.usecases.PasswordPatternValidator
+import com.portfolio.tasky.usecases.NameValidation
+import com.portfolio.tasky.usecases.PasswordPatternValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel  @Inject constructor(
     private val emailValidator: EmailPatternValidator,
-    private val passwordPatternValidator: PasswordPatternValidator,
+    private val passwordPatternValidation: PasswordPatternValidation,
+    private val nameValidation: NameValidation
 ) : ViewModel() {
 
     private val mutableEmailChange = MutableLiveData(false)
@@ -32,10 +34,10 @@ class RegisterViewModel  @Inject constructor(
         mutableEmailChange.value = emailValidator.isValidEmailPattern(email)
     }
     fun passwordChange(password : String){
-        mutablePasswordChange.value = passwordPatternValidator.isPasswordPatternValid(password)
+        mutablePasswordChange.value = passwordPatternValidation.isPasswordPatternValid(password)
     }
     fun nameChange(name : String){
-        mutableNameChange.value = name.isNotEmpty() && name.length > 3
+        mutableNameChange.value =nameValidation.isValidName(name)
     }
     fun areFieldsValid(){
         mutableFieldsValid.value =  mutablePasswordChange.value == true && mutablePasswordChange.value == true && mutableNameChange.value == true

@@ -18,7 +18,13 @@ class ValidatorsModule {
 
         @Provides
         @Singleton
-        fun providePasswordPatternValidation(): PasswordPatternValidator {
-                return PasswordPatternValidatorImpl()
+        fun providePasswordPatternValidation(): PasswordPatternValidation {
+                return PasswordPatternValidation()
+        }
+
+        @Provides
+        @Singleton
+        fun provideNameValidation(): NameValidation{
+                return NameValidation()
         }
 }
