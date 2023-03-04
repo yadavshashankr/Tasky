@@ -24,6 +24,8 @@
                 android:layout_gravity="center"
                 android:background="@color/black"
                 android:minHeight="120dp"
+                android:paddingEnd="@dimen/_12sdp"
+                android:paddingStart="0dp"
                 app:title="@string/welcome_back"
                 android:gravity="center"
                 android:textAlignment="center"

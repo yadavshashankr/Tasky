@@ -1,86 +1,107 @@
 package com.portfolio.tasky.entry.fragments
 
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.transition.Fade
+import androidx.fragment.app.viewModels
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
-import com.portfolio.tasky.globals.Constants.Companion.Entry.LOGIN
-import com.portfolio.tasky.globals.DataUtils.Companion.Validators.clearValidatorParams
+import com.portfolio.tasky.viewModels.LoginViewModel
+import com.portfolio.tasky.views.TaskyAppCompatEditText
+import dagger.hilt.android.AndroidEntryPoint
 
-class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), FieldsValidator {
+@AndroidEntryPoint
+class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged  {
     private lateinit var viewBinding: LayoutLoginBinding
 
+    private val viewModel: LoginViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewBinding = LayoutLoginBinding.inflate(inflater, container, false)
+        viewBinding = DataBindingUtil.inflate(inflater, R.layout.layout_login, container, false)
+        viewBinding.lifecycleOwner = this
         return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setObservers()
         viewBinding.btnLogin.setOnClickListener {
             openRegistrationFragment()
         }
     }
+
+    private fun setObservers() {
+        viewModel.emailChange.observe(viewLifecycleOwner){
+            val emailField = viewBinding.etEmail
+            it?.let { it1 -> emailField.setValid(it1)
+                emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+        }
+        viewModel.passwordChange.observe(viewLifecycleOwner){
+            val passwordField = viewBinding.etPassword
+            it?.let { it1 -> passwordField.setValid(it1)
+                passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+        }
+        viewModel.areFieldsValid.observe(viewLifecycleOwner){
+            it.let {  viewBinding.btnLogin.isEnabled = it == true }
+        }
+    }
+
     private fun setFieldValidations(loginFragment: LoginFragment?) {
-        clearValidatorParams()
-
         val etEmail = viewBinding.etEmail.subLayout.etInput
-        etEmail.addTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etEmail, LOGIN,
-                it
-            )
-        })
-
         val etPassword = viewBinding.etPassword.subLayout.etInput
-        etPassword.addTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etPassword, LOGIN,
+
+        etEmail.addTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etEmail,
                 it
             )
         })
+        etPassword.addTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etPassword,
+                it
+            )
+        })
+    }
+
+    override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
+        if (taskyAppcompatEditText.id == R.id.et_email){
+            viewModel.emailChange(editable.toString() as CharSequence)
+        }
+
+
+        if(taskyAppcompatEditText.id == R.id.et_password){
+            viewModel.passwordChange(editable.toString() as CharSequence)
+        }
+            viewModel.areFieldsValid()
     }
 
     private fun removeFieldValidations(loginFragment: LoginFragment?) {
-        clearValidatorParams()
 
         val etEmail = viewBinding.etEmail.subLayout.etInput
-        etEmail.removeTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etEmail, LOGIN,
-                it
-            )
-        })
-
         val etPassword = viewBinding.etPassword.subLayout.etInput
-        etPassword.removeTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etPassword, LOGIN,
+
+        etEmail.removeTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etEmail,
                 it
             )
         })
-    }
 
-    override fun fieldsValidated(valid: Boolean) {
-        viewBinding.btnLogin.isEnabled = valid
-        valid.let {
-            if (it) {
-                viewBinding.etEmail.clearFocus()
-                viewBinding.etPassword.clearFocus()
-                viewBinding.btnLogin.requestFocus()
-            }
-        }
-
+        etPassword.removeTextChangedListener(loginFragment?.let {
+            TaskyValidationWatcherImpl(viewBinding.etPassword,
+                it
+            )
+        })
     }
 
     private fun openRegistrationFragment() {
@@ -106,13 +127,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Fi
         private var loginFragment : LoginFragment? = null
         @JvmStatic
         fun getInstance(): LoginFragment {
-                if (loginFragment == null){
-                    loginFragment = LoginFragment()
-                }
-                loginFragment?.apply {
-                    enterTransition = Slide(Gravity.BOTTOM)
-                    exitTransition = Fade(Fade.MODE_OUT)
-                }
+            loginFragment = LoginFragment()
+            loginFragment?.apply {
+                enterTransition = Slide(Gravity.BOTTOM)
+            }
             return loginFragment as LoginFragment
         }
 

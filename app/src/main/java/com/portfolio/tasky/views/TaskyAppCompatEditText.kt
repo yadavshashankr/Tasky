@@ -95,7 +95,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
 
     private fun showHidePassword(event: MotionEvent) {
         val textLocation = IntArray(2)
-        if (event.rawX >= textLocation[0] + subLayout.etInput.width - subLayout.etInput.totalPaddingRight) {
+        if (clickedLocation(event) >= clickableLocation(textLocation[0])) {
 
             if(subLayout.etInput.compoundDrawablesRelative[2] != null && !subLayout.valid!!) {
 
@@ -113,5 +113,13 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
             }
         }
 
+    }
+
+    private fun clickedLocation(event: MotionEvent): Int {
+        return event.rawX.toInt()
+    }
+
+    private fun clickableLocation(textLocation : Int): Int {
+        return textLocation + subLayout.etInput.width - subLayout.etInput.totalPaddingRight
     }
 }

@@ -8,7 +8,9 @@ import androidx.databinding.DataBindingUtil
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.ActivityEntryBinding
 import com.portfolio.tasky.entry.fragments.LoginFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl() {
     private var viewBinding: ActivityEntryBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
