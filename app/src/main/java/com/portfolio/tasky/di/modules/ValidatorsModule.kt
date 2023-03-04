@@ -12,13 +12,13 @@ import javax.inject.Singleton
 class ValidatorsModule {
         @Provides
         @Singleton
-        fun provideEmailPatternValidationImpl(): EmailPatternValidator {
+        fun provideEmailPatternValidation(): EmailPatternValidator {
                 return EmailPatternValidatorImpl()
         }
 
         @Provides
         @Singleton
-        fun providePasswordPatternValidationImpl(): PasswordPatternValidator {
+        fun providePasswordPatternValidation(): PasswordPatternValidator {
                 return PasswordPatternValidatorImpl()
         }
 }

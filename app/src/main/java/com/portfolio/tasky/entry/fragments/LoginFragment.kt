@@ -76,12 +76,11 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
     override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
         if (taskyAppcompatEditText.id == R.id.et_email){
-            viewModel.emailChange(editable.toString() as CharSequence)
+            viewModel.emailChange(editable.toString())
         }
 
-
         if(taskyAppcompatEditText.id == R.id.et_password){
-            viewModel.passwordChange(editable.toString() as CharSequence)
+            viewModel.passwordChange(editable.toString())
         }
             viewModel.areFieldsValid()
     }

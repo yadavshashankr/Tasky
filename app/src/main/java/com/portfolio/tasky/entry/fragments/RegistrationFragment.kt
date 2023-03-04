@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -27,7 +28,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewBinding = LayoutRegistrationBinding.inflate(inflater, container, false)
+        viewBinding = DataBindingUtil.inflate(inflater, R.layout.layout_registration, container, false)
         viewBinding.lifecycleOwner = this
         return viewBinding.root
     }
@@ -85,19 +86,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
-
-
     override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
         if (taskyAppcompatEditText.id == R.id.et_email){
-            viewModel.emailChange(editable.toString() as CharSequence)
+            viewModel.emailChange(editable.toString())
         }
 
         if(taskyAppcompatEditText.id == R.id.et_password){
-            viewModel.passwordChange(editable.toString() as CharSequence)
+            viewModel.passwordChange(editable.toString())
         }
 
         if(taskyAppcompatEditText.id == R.id.et_name){
-            viewModel.nameChange(editable.toString() as CharSequence)
+            viewModel.nameChange(editable.toString())
         }
         viewModel.areFieldsValid()
     }
@@ -123,7 +122,6 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             )
         })
     }
-
 
     override fun fieldsValidated(valid: Boolean) {
         viewBinding.btnReg.isEnabled = valid

@@ -15,26 +15,26 @@ class RegisterViewModel  @Inject constructor(
 ) : ViewModel() {
 
     private val mutableEmailChange = MutableLiveData(false)
-    val emailChange : LiveData<Boolean?> = mutableEmailChange
+    val emailChange : LiveData<Boolean> = mutableEmailChange
 
     private val mutablePasswordChange = MutableLiveData(false)
-    val passwordChange : LiveData<Boolean?> = mutablePasswordChange
+    val passwordChange : LiveData<Boolean> = mutablePasswordChange
 
     private val mutableNameChange = MutableLiveData(false)
-    val nameChange : LiveData<Boolean?> = mutableNameChange
+    val nameChange : LiveData<Boolean> = mutableNameChange
 
     private val mutableFieldsValid = MutableLiveData(false)
-    val areFieldsValid : LiveData<Boolean?> = mutableFieldsValid
+    val areFieldsValid : LiveData<Boolean> = mutableFieldsValid
 
 
 
-    fun emailChange(email : CharSequence){
+    fun emailChange(email : String){
         mutableEmailChange.value = emailValidator.isValidEmailPattern(email)
     }
-    fun passwordChange(password : CharSequence){
+    fun passwordChange(password : String){
         mutablePasswordChange.value = passwordPatternValidator.isPasswordPatternValid(password)
     }
-    fun nameChange(name : CharSequence){
+    fun nameChange(name : String){
         mutableNameChange.value = name.isNotEmpty() && name.length > 3
     }
     fun areFieldsValid(){

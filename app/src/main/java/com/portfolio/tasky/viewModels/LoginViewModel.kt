@@ -18,17 +18,17 @@ class LoginViewModel @Inject constructor(
     val emailChange : LiveData<Boolean> = mutableEmailChange
 
     private val mutablePasswordChange = MutableLiveData(false)
-    val passwordChange : LiveData<Boolean?> = mutablePasswordChange
+    val passwordChange : LiveData<Boolean> = mutablePasswordChange
 
     private val mutableFieldsValid = MutableLiveData(false)
-    val areFieldsValid : LiveData<Boolean?> = mutableFieldsValid
+    val areFieldsValid : LiveData<Boolean> = mutableFieldsValid
 
 
 
-    fun emailChange(email : CharSequence){
+    fun emailChange(email : String){
         mutableEmailChange.value = emailValidator.isValidEmailPattern(email)
     }
-    fun passwordChange(password : CharSequence){
+    fun passwordChange(password : String){
         mutablePasswordChange.value = passwordPatternValidator.isPasswordPatternValid(password)
     }
     fun areFieldsValid(){
