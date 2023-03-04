@@ -96,7 +96,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
         val textLocation = IntArray(2)
         if (clickedLocation(event) >= clickableLocation(textLocation[0])) {
 
-            if(subLayout.etInput.compoundDrawablesRelative[2] != null && !subLayout.valid!!) {
+            if(checkIfDrawableEndAvailable()) {
 
                 val drawableText = ContextCompat.getDrawable(context, R.drawable.ic_password_text)
                 val drawableDots = ContextCompat.getDrawable(context, R.drawable.ic_password_dots)
@@ -112,6 +112,10 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
             }
         }
 
+    }
+
+    private fun checkIfDrawableEndAvailable(): Boolean {
+        return subLayout.etInput.compoundDrawablesRelative[2] != null && !subLayout.valid
     }
 
     private fun clickedLocation(event: MotionEvent): Int {
