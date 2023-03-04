@@ -115,7 +115,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
     }
 
     private fun checkIfDrawableEndAvailable(): Boolean {
-        return subLayout.etInput.compoundDrawablesRelative[2] != null && !subLayout.valid
+        return subLayout.etInput.compoundDrawablesRelative[2] != null && !subLayout.valid!!
     }
 
     private fun clickedLocation(event: MotionEvent): Int {

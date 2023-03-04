@@ -21,10 +21,4 @@ class ValidatorsModule {
         fun providePasswordPatternValidationImpl(): PasswordPatternValidator {
                 return PasswordPatternValidatorImpl()
         }
-
-        @Provides
-        @Singleton
-        fun provideNamePatternValidatorImpl(): NamePatternValidator {
-                return NamePatternValidatorImpl()
-        }
 }

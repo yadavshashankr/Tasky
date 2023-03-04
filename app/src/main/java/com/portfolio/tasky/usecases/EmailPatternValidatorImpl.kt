@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EmailPatternValidatorImpl @Inject constructor() : EmailPatternValidator {
-    override fun isValidEmailPattern(email: CharSequence?): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email as CharSequence).matches()
+    override fun isValidEmailPattern(email: CharSequence): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }

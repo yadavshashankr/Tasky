@@ -45,13 +45,13 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     private fun setObservers() {
         viewModel.emailChange.observe(viewLifecycleOwner){
             val emailField = viewBinding.etEmail
-            it?.let { it1 -> emailField.setValid(it1)
-                emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+            it?.let { isValid -> emailField.setValid(isValid)
+                emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
         viewModel.passwordChange.observe(viewLifecycleOwner){
             val passwordField = viewBinding.etPassword
-            it?.let { it1 -> passwordField.setValid(it1)
-                passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+            it?.let { isValid -> passwordField.setValid(isValid)
+                passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
         viewModel.areFieldsValid.observe(viewLifecycleOwner){
             it.let {  viewBinding.btnLogin.isEnabled = it == true }
@@ -86,22 +86,22 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             viewModel.areFieldsValid()
     }
 
-    private fun removeFieldValidations(loginFragment: LoginFragment?) {
+    private fun removeFieldValidations(loginFragment: LoginFragment) {
 
         val etEmail = viewBinding.etEmail.subLayout.etInput
         val etPassword = viewBinding.etPassword.subLayout.etInput
 
-        etEmail.removeTextChangedListener(loginFragment?.let {
+        etEmail.removeTextChangedListener(
             TaskyValidationWatcherImpl(viewBinding.etEmail,
-                it
+                loginFragment
             )
-        })
+        )
 
-        etPassword.removeTextChangedListener(loginFragment?.let {
+        etPassword.removeTextChangedListener(
             TaskyValidationWatcherImpl(viewBinding.etPassword,
-                it
+                loginFragment
             )
-        })
+        )
     }
 
     private fun openRegistrationFragment() {
@@ -124,14 +124,14 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     }
 
     companion object {
-        private var loginFragment : LoginFragment? = null
+        private lateinit var loginFragment : LoginFragment
         @JvmStatic
         fun getInstance(): LoginFragment {
             loginFragment = LoginFragment()
-            loginFragment?.apply {
+            loginFragment.apply {
                 enterTransition = Slide(Gravity.BOTTOM)
             }
-            return loginFragment as LoginFragment
+            return loginFragment
         }
 
     }

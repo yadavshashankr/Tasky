@@ -44,18 +44,18 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     private fun setObservers() {
         viewModel.emailChange.observe(viewLifecycleOwner){
             val emailField = viewBinding.etEmail
-            it?.let { it1 -> emailField.setValid(it1)
-                emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+            it?.let { isValid -> emailField.setValid(isValid)
+                emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
         viewModel.passwordChange.observe(viewLifecycleOwner){
             val passwordField = viewBinding.etPassword
-            it?.let { it1 -> passwordField.setValid(it1)
-                passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+            it?.let { isValid -> passwordField.setValid(isValid)
+                passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
         viewModel.nameChange.observe(viewLifecycleOwner){
             val etName = viewBinding.etName
-            it?.let { it1 -> etName.setValid(it1)
-                etName.setError(etName.subLayout.etInput.text?.isNotEmpty() as Boolean && !it1)}
+            it?.let { isValid -> etName.setValid(isValid)
+                etName.setError(etName.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
 
         viewModel.areFieldsValid.observe(viewLifecycleOwner){
@@ -158,14 +158,14 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     }
 
     companion object {
-        private var registrationFragment : RegistrationFragment? = null
+        private lateinit var registrationFragment : RegistrationFragment
         @JvmStatic
         fun getInstance(): RegistrationFragment {
             registrationFragment = RegistrationFragment()
-            registrationFragment?.apply {
+            registrationFragment.apply {
                 enterTransition = Slide(Gravity.BOTTOM)
             }
-            return registrationFragment as RegistrationFragment
+            return registrationFragment
         }
     }
 }
