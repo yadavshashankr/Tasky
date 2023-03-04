@@ -13,4 +13,8 @@ class FragmentInflaterImpl : FragmentInflater {
     override fun inflateFragment(fragment: Fragment, viewID: Int) {
         fragmentManager.beginTransaction().replace(viewID, fragment, javaClass.name).commitAllowingStateLoss()
     }
+
+    override fun removeFragment(fragment : Fragment) {
+        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+    }
 }

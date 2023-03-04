@@ -6,7 +6,6 @@ import com.portfolio.tasky.globals.Constants
 
 
 class ToolbarHandlerImpl : ToolbarHandler {
-    private lateinit var toolbar: Toolbar
     private lateinit var translateAnimation: TranslateAnimation
 
     override fun setToolBarText(toolbar: Toolbar, text: String) {

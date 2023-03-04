@@ -13,6 +13,10 @@
             type="java.lang.Integer" />
 
         <variable
+            name="password"
+            type="java.lang.Boolean" />
+
+        <variable
             name="valid"
             type="java.lang.Boolean" />
 
@@ -34,8 +38,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@{error ? @drawable/input_field_error : @drawable/input_field_background_selector}"
-    android:drawableEnd="@{inputType.equals(InputType.TYPE_CLASS_TEXT) &amp;&amp; valid ? @drawable/ic_green_tick : inputType.equals(InputType.TYPE_TEXT_VARIATION_PASSWORD) ? @drawable/ic_password_dots : inputType.equals(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) ? @drawable/ic_password_text : drawableLast}"
+    android:drawableEnd="@{valid ? @drawable/ic_green_tick : drawableLast != null ? drawableLast : null}"
     android:fontFamily="@font/inter_regular_400"
+    android:inputType="@{password ? (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD) : InputType.TYPE_CLASS_TEXT }"
     android:textColorHint="@color/grey_4b2"
     android:textColor="@color/grey_d5a"
     android:hint="@{hint}"
