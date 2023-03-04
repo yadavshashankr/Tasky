@@ -85,11 +85,10 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_UP -> {
-                showHidePassword(event)
-            }
+        if(event.action == MotionEvent.ACTION_UP ){
+            showHidePassword(event)
         }
+
         return false
     }
 
