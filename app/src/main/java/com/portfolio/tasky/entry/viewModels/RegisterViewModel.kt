@@ -16,30 +16,30 @@ class RegisterViewModel  @Inject constructor(
     private val nameValidation: NameValidation
 ) : ViewModel() {
 
-    private val mutableEmailChange = MutableLiveData(false)
-    val emailChange : LiveData<Boolean> = mutableEmailChange
+    private val mutableEmail = MutableLiveData(false)
+    val email : LiveData<Boolean> = mutableEmail
 
-    private val mutablePasswordChange = MutableLiveData(false)
-    val passwordChange : LiveData<Boolean> = mutablePasswordChange
+    private val mutablePassword = MutableLiveData(false)
+    val password : LiveData<Boolean> = mutablePassword
 
-    private val mutableNameChange = MutableLiveData(false)
-    val nameChange : LiveData<Boolean> = mutableNameChange
+    private val mutableName = MutableLiveData(false)
+    val name : LiveData<Boolean> = mutableName
 
     private val mutableFieldsValid = MutableLiveData(false)
-    val areFieldsValid : LiveData<Boolean> = mutableFieldsValid
+    val validateFields : LiveData<Boolean> = mutableFieldsValid
 
 
 
-    fun emailChange(email : String) {
-        mutableEmailChange.value = emailValidator.isValidEmailPattern(email)
+    fun onEmailChange(email : String) {
+        mutableEmail.value = emailValidator.isValidEmailPattern(email)
     }
-    fun passwordChange(password : String) {
-        mutablePasswordChange.value = passwordPatternValidation.isPasswordPatternValid(password)
+    fun onPasswordChange(password : String) {
+        mutablePassword.value = passwordPatternValidation.isPasswordPatternValid(password)
     }
-    fun nameChange(name : String) {
-        mutableNameChange.value = nameValidation.isValidName(name)
+    fun onNameChange(name : String) {
+        mutableName.value = nameValidation.isValidName(name)
     }
     fun areFieldsValid() {
-        mutableFieldsValid.value =  mutablePasswordChange.value == true && mutablePasswordChange.value == true && mutableNameChange.value == true
+        mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
     }
 }

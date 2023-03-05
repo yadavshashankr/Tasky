@@ -47,17 +47,17 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     }
 
     private fun setObservers() {
-        viewModel.emailChange.observe(viewLifecycleOwner) {
+        viewModel.email.observe(viewLifecycleOwner) {
             val emailField = viewBinding.etEmail
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.passwordChange.observe(viewLifecycleOwner) {
+        viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.areFieldsValid.observe(viewLifecycleOwner) {
+        viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnLogin.isEnabled = it == true }
         }
     }
@@ -80,11 +80,11 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
     override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
         if (taskyAppcompatEditText.id == R.id.et_email) {
-            viewModel.emailChange(editable.toString())
+            viewModel.onEmailChange(editable.toString())
         }
 
         if(taskyAppcompatEditText.id == R.id.et_password) {
-            viewModel.passwordChange(editable.toString())
+            viewModel.onPasswordChange(editable.toString())
         }
             viewModel.areFieldsValid()
     }

@@ -37,7 +37,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
         setInputType()
         setHint()
         setValid(false)
-        isPassword()
+        switchInputType()
         setTouchListener()
     }
 
@@ -60,7 +60,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
     fun setValid(valid: Boolean) {
         subLayout.valid = valid
     }
-    private fun isPassword() {
+    private fun switchInputType() {
         subLayout.password = isPassword
     }
 
@@ -108,7 +108,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
                     subLayout.drawableLast = drawableText
                 }
                 isPassword = !isPassword
-                isPassword()
+                switchInputType()
                 Selection.setSelection(subLayout.etInput.text, subLayout.etInput.text.toString().length)
             }
         }

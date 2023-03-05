@@ -45,23 +45,23 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     }
 
     private fun setObservers() {
-        viewModel.emailChange.observe(viewLifecycleOwner) {
+        viewModel.email.observe(viewLifecycleOwner) {
             val emailField = viewBinding.etEmail
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.passwordChange.observe(viewLifecycleOwner) {
+        viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.nameChange.observe(viewLifecycleOwner) {
+        viewModel.name.observe(viewLifecycleOwner) {
             val etName = viewBinding.etName
             it?.let { isValid -> etName.setValid(isValid)
                 etName.setError(etName.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
 
-        viewModel.areFieldsValid.observe(viewLifecycleOwner) {
+        viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnReg.isEnabled = it == true }
         }
     }
@@ -90,15 +90,15 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
     override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
         if (taskyAppcompatEditText.id == R.id.et_email) {
-            viewModel.emailChange(editable.toString())
+            viewModel.onEmailChange(editable.toString())
         }
 
         if(taskyAppcompatEditText.id == R.id.et_password) {
-            viewModel.passwordChange(editable.toString())
+            viewModel.onPasswordChange(editable.toString())
         }
 
         if(taskyAppcompatEditText.id == R.id.et_name) {
-            viewModel.nameChange(editable.toString())
+            viewModel.onNameChange(editable.toString())
         }
         viewModel.areFieldsValid()
     }
