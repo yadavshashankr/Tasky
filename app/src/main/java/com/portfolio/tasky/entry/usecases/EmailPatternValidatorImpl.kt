@@ -1,4 +1,4 @@
-package com.portfolio.tasky.usecases
+package com.portfolio.tasky.entry.usecases
 
 import android.util.Patterns
 import javax.inject.Inject

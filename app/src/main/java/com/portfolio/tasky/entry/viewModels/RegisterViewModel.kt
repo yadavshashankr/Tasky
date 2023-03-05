@@ -1,11 +1,11 @@
-package com.portfolio.tasky.viewModels
+package com.portfolio.tasky.entry.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.portfolio.tasky.usecases.EmailPatternValidator
-import com.portfolio.tasky.usecases.NameValidation
-import com.portfolio.tasky.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.usecases.EmailPatternValidator
+import com.portfolio.tasky.entry.usecases.NameValidation
+import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -30,16 +30,16 @@ class RegisterViewModel  @Inject constructor(
 
 
 
-    fun emailChange(email : String){
+    fun emailChange(email : String) {
         mutableEmailChange.value = emailValidator.isValidEmailPattern(email)
     }
-    fun passwordChange(password : String){
+    fun passwordChange(password : String) {
         mutablePasswordChange.value = passwordPatternValidation.isPasswordPatternValid(password)
     }
-    fun nameChange(name : String){
-        mutableNameChange.value =nameValidation.isValidName(name)
+    fun nameChange(name : String) {
+        mutableNameChange.value = nameValidation.isValidName(name)
     }
-    fun areFieldsValid(){
+    fun areFieldsValid() {
         mutableFieldsValid.value =  mutablePasswordChange.value == true && mutablePasswordChange.value == true && mutableNameChange.value == true
     }
 }

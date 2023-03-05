@@ -14,12 +14,16 @@ import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
-import com.portfolio.tasky.viewModels.LoginViewModel
+import com.portfolio.tasky.entry.viewModels.LoginViewModel
+import com.portfolio.tasky.usecases.FragmentInflater
+import com.portfolio.tasky.usecases.FragmentInflaterImpl
+import com.portfolio.tasky.usecases.TaskyWatcherImpl
+import com.portfolio.tasky.usecases.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged  {
+class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged {
     private lateinit var viewBinding: LayoutLoginBinding
 
     private val viewModel: LoginViewModel by viewModels()
@@ -43,17 +47,17 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     }
 
     private fun setObservers() {
-        viewModel.emailChange.observe(viewLifecycleOwner){
+        viewModel.emailChange.observe(viewLifecycleOwner) {
             val emailField = viewBinding.etEmail
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.passwordChange.observe(viewLifecycleOwner){
+        viewModel.passwordChange.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
-        viewModel.areFieldsValid.observe(viewLifecycleOwner){
+        viewModel.areFieldsValid.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnLogin.isEnabled = it == true }
         }
     }
@@ -63,23 +67,23 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         val etPassword = viewBinding.etPassword.subLayout.etInput
 
         etEmail.addTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etEmail,
+            TaskyWatcherImpl(viewBinding.etEmail,
                 it
             )
         })
         etPassword.addTextChangedListener(loginFragment?.let {
-            TaskyValidationWatcherImpl(viewBinding.etPassword,
+            TaskyWatcherImpl(viewBinding.etPassword,
                 it
             )
         })
     }
 
     override fun onTextChanged(editable: Editable, taskyAppcompatEditText: TaskyAppCompatEditText) {
-        if (taskyAppcompatEditText.id == R.id.et_email){
+        if (taskyAppcompatEditText.id == R.id.et_email) {
             viewModel.emailChange(editable.toString())
         }
 
-        if(taskyAppcompatEditText.id == R.id.et_password){
+        if(taskyAppcompatEditText.id == R.id.et_password) {
             viewModel.passwordChange(editable.toString())
         }
             viewModel.areFieldsValid()
@@ -91,13 +95,13 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         val etPassword = viewBinding.etPassword.subLayout.etInput
 
         etEmail.removeTextChangedListener(
-            TaskyValidationWatcherImpl(viewBinding.etEmail,
+            TaskyWatcherImpl(viewBinding.etEmail,
                 loginFragment
             )
         )
 
         etPassword.removeTextChangedListener(
-            TaskyValidationWatcherImpl(viewBinding.etPassword,
+            TaskyWatcherImpl(viewBinding.etPassword,
                 loginFragment
             )
         )

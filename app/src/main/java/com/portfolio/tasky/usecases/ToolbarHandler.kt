@@ -1,4 +1,4 @@
-package com.portfolio.tasky
+package com.portfolio.tasky.usecases
 
 import androidx.appcompat.widget.Toolbar
 

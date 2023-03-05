@@ -1,4 +1,4 @@
-package com.portfolio.tasky.usecases
+package com.portfolio.tasky.entry.usecases
 
 import javax.inject.Inject
 

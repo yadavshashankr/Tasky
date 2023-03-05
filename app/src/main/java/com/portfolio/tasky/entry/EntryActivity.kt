@@ -8,6 +8,10 @@ import androidx.databinding.DataBindingUtil
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.ActivityEntryBinding
 import com.portfolio.tasky.entry.fragments.LoginFragment
+import com.portfolio.tasky.usecases.FragmentInflater
+import com.portfolio.tasky.usecases.FragmentInflaterImpl
+import com.portfolio.tasky.usecases.ToolbarHandler
+import com.portfolio.tasky.usecases.ToolbarHandlerImpl
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,7 +32,7 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
         inflateFragment(loginFragment, R.id.fragment_container)
     }
 
-    fun setTitle(text: String){
+    fun setTitle(text: String) {
         setToolBarText(viewBinding?.toolbar as Toolbar, text)
     }
 }

@@ -1,4 +1,4 @@
-package com.portfolio.tasky
+package com.portfolio.tasky.usecases
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
