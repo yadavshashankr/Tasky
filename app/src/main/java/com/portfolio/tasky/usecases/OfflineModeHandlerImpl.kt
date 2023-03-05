@@ -14,6 +14,7 @@ class OfflineModeHandlerImpl : OfflineModeHandler {
 
         offlineTextField.visibility = View.VISIBLE
 
+      
         if (connected){
             offlineTextField.text = Constants.Companion.AppConnectivityMode.ONLINE
         }else{

@@ -45,13 +45,20 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
     }
 
     override fun internetAvailable() {
-        viewBinding.layoutOnlineMode.tvOnlineMode.let { onConnected(it, true) }
-        viewBinding.layoutOnlineMode.drawableFirst = ContextCompat.getDrawable(this, R.drawable.ic_online)
+
+        runOnUiThread {
+            viewBinding.layoutOnlineMode.tvOnlineMode.let { onConnected(it, true) }
+            viewBinding.layoutOnlineMode.drawableFirst = ContextCompat.getDrawable(this, R.drawable.ic_online)
+        }
     }
 
     override fun internetNotAvailable() {
-        viewBinding.layoutOnlineMode.tvOnlineMode.let { onConnected(it, false) }
-        viewBinding.layoutOnlineMode.drawableFirst = ContextCompat.getDrawable(this, R.drawable.ic_offline)
+
+        runOnUiThread {
+            viewBinding.layoutOnlineMode.tvOnlineMode.let { onConnected(it, false) }
+            viewBinding.layoutOnlineMode.drawableFirst = ContextCompat.getDrawable(this, R.drawable.ic_offline)
+        }
+
     }
 
     override fun onResume() {
