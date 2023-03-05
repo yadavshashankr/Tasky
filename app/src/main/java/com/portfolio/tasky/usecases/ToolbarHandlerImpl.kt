@@ -1,4 +1,4 @@
-package com.portfolio.tasky
+package com.portfolio.tasky.usecases
 
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.widget.Toolbar

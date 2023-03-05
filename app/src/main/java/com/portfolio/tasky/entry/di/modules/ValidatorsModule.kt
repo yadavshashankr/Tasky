@@ -1,5 +1,9 @@
-package com.portfolio.tasky.di.modules
+package com.portfolio.tasky.entry.di.modules
 
+import com.portfolio.tasky.entry.usecases.EmailPatternValidator
+import com.portfolio.tasky.entry.usecases.EmailPatternValidatorImpl
+import com.portfolio.tasky.entry.usecases.NameValidation
+import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
 import com.portfolio.tasky.usecases.*
 import dagger.Module
 import dagger.Provides
@@ -24,7 +28,7 @@ class ValidatorsModule {
 
         @Provides
         @Singleton
-        fun provideNameValidation(): NameValidation{
+        fun provideNameValidation(): NameValidation {
                 return NameValidation()
         }
 }

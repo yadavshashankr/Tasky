@@ -19,7 +19,7 @@ import com.portfolio.tasky.R
 import com.portfolio.tasky.databinding.LayoutInputFieldBinding
 
 
-class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), OnTouchListener   {
+class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs), OnTouchListener {
 
     lateinit var subLayout: LayoutInputFieldBinding
     private var error : Boolean = false
@@ -37,7 +37,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
         setInputType()
         setHint()
         setValid(false)
-        isPassword()
+        switchInputType()
         setTouchListener()
     }
 
@@ -53,17 +53,18 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
         subLayout.drawableLast = drawableLast
     }
 
-    fun setError(error : Boolean){
+    fun setError(error : Boolean) {
         subLayout.error = error
     }
 
-    fun setValid(valid: Boolean){
+    fun setValid(valid: Boolean) {
         subLayout.valid = valid
     }
-    private fun isPassword(){
+    private fun switchInputType() {
         subLayout.password = isPassword
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setTouchListener() {
         subLayout.etInput.setOnTouchListener(this)
     }
@@ -107,7 +108,7 @@ class TaskyAppCompatEditText(context: Context, attrs: AttributeSet) : FrameLayou
                     subLayout.drawableLast = drawableText
                 }
                 isPassword = !isPassword
-                isPassword()
+                switchInputType()
                 Selection.setSelection(subLayout.etInput.text, subLayout.etInput.text.toString().length)
             }
         }
