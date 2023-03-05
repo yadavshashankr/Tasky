@@ -11,6 +11,10 @@ class Constants {
             const val MIN_CHARACTERS_FOR_PASSWORD = 9
             const val MAX_CHARACTERS_FOR_PASSWORD : Long = 16
         }
+        object AppConnectivityMode {
+            const val OFFLINE = "Offline"
+            const val ONLINE = "Online"
+        }
     }
 
 }
