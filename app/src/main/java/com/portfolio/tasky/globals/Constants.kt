@@ -1,5 +1,7 @@
 package com.portfolio.tasky.globals
 
+
+
 class Constants {
 
     companion object{
@@ -14,6 +16,10 @@ class Constants {
         object AppConnectivityMode {
             const val OFFLINE = "Offline"
             const val ONLINE = "Online"
+        }
+        object ApiProperties {
+            const val URL ="https://tasky.pl-coding.com/"
+            const val DEFAULT_REQUEST_TIMEOUT : Long =  400
         }
     }
 
