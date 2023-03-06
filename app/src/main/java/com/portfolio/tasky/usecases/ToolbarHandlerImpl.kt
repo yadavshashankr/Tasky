@@ -14,8 +14,8 @@ class ToolbarHandlerImpl : ToolbarHandler {
     }
 
      private fun animateDown(toolbar: Toolbar) {
-        translateAnimation = TranslateAnimation(0f, 0f, Constants.Companion.ToolbarAnimationProperties.MAX_TRANSLATION_Y, 0f)
-        translateAnimation.duration = Constants.Companion.ToolbarAnimationProperties.DURATION
+        translateAnimation = TranslateAnimation(0f, 0f, Constants.Companion.AnimationProperties.MAX_TRANSLATION_Y, 0f)
+        translateAnimation.duration = Constants.Companion.AnimationProperties.DURATION
         toolbar.startAnimation(translateAnimation)
     }
 }
