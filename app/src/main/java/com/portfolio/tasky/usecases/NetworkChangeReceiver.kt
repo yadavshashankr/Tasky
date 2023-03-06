@@ -29,13 +29,12 @@ class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
             .build()
 
-            val networkCapabilities = connectivityManager.activeNetwork
-            val actNw =
-                connectivityManager.getNetworkCapabilities(networkCapabilities)
+            val activeNetwork = connectivityManager.activeNetwork
+            val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
 
         when {
-            actNw?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(NetworkStatus.Available)
-            actNw?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(NetworkStatus.Available)
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(NetworkStatus.Available)
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(NetworkStatus.Available)
             else -> postValue(NetworkStatus.Unavailable)
         }
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
@@ -63,6 +62,7 @@ class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
                     validNetworkConnections.remove(network)
                 }
             }
+
         }
     }
 }
