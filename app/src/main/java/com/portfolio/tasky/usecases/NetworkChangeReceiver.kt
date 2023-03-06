@@ -14,31 +14,6 @@ class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
     private var connectivityManager: ConnectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    override fun onActive() {
-        isOnline()
-    }
-
-    override fun onInactive() {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
-    }
-
-    private fun isOnline() {
-        val networkRequest = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-            .build()
-
-            val activeNetwork = connectivityManager.activeNetwork
-            val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-
-        when {
-            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(NetworkStatus.Available)
-            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(NetworkStatus.Available)
-            else -> postValue(NetworkStatus.Unavailable)
-        }
-        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-    }
 
     private var networkCallback: ConnectivityManager.NetworkCallback = object : ConnectivityManager.NetworkCallback() {
 
@@ -64,5 +39,29 @@ class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
             }
 
         }
+    }
+
+
+    override fun onActive() {
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+
+        when {
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(NetworkStatus.Available)
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(NetworkStatus.Available)
+            else -> postValue(NetworkStatus.Unavailable)
+        }
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+    }
+
+
+    override fun onInactive() {
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }
