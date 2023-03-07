@@ -9,4 +9,6 @@
     <string name="get_started">Get Started</string>
     <string name="create_your_account">Create your account</string>
     <string name="welcome_back">Welcome Back!</string>
+    <string name="text_online">Online</string>
+    <string name="text_offline">Offline</string>
 </resources>
