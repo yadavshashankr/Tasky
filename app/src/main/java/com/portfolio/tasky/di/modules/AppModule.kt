@@ -3,7 +3,7 @@ package com.portfolio.tasky.di.modules
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.portfolio.tasky.usecases.NetworkChangeReceiver
+import com.portfolio.tasky.data.NetworkChangeReceiver
 import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.Module
 import dagger.Provides

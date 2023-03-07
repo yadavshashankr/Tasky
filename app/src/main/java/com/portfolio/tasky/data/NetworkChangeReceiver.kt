@@ -1,4 +1,4 @@
-package com.portfolio.tasky.usecases
+package com.portfolio.tasky.data
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -6,9 +6,11 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
+import com.portfolio.tasky.usecases.NetworkStatus
+import javax.inject.Inject
 
 
-class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
+class NetworkChangeReceiver @Inject constructor(var context: Context) : LiveData<NetworkStatus>() {
 
     val validNetworkConnections : MutableSet<Network> = HashSet()
     private var connectivityManager: ConnectivityManager =
@@ -53,8 +55,12 @@ class NetworkChangeReceiver(var context: Context) : LiveData<NetworkStatus>() {
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
 
         when {
-            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(NetworkStatus.Available)
-            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(NetworkStatus.Available)
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true -> postValue(
+                NetworkStatus.Available
+            )
+            networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) == true -> postValue(
+                NetworkStatus.Available
+            )
             else -> postValue(NetworkStatus.Unavailable)
         }
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
