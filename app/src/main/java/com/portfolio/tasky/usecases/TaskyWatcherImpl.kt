@@ -2,6 +2,7 @@ package com.portfolio.tasky.usecases
 
 import android.text.Editable
 import android.text.TextWatcher
+import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 
 open class TaskyWatcherImpl(

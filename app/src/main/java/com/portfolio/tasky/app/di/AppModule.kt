@@ -2,15 +2,23 @@ package com.portfolio.tasky.app.di
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.portfolio.tasky.data.NetworkChangeReceiver
 import com.portfolio.tasky.globals.Constants
 import com.portfolio.tasky.networking.RequestInterceptor
+import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
+import com.portfolio.tasky.networking.usecases.TaskyLoaderImpl
+import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
+import com.portfolio.tasky.networking.usecases.TaskyCallStatusImpl
+import com.portfolio.tasky.usecases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -27,10 +35,15 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideNetworkChangeReceiver(context: Context): LiveData<NetworkStatus> {
+        return NetworkChangeReceiver(context)
+    }
+
+    @Singleton
+    @Provides
     fun providesGson(): Gson {
         return GsonBuilder().setLenient().excludeFieldsWithoutExposeAnnotation().create()
     }
-
 
     @Singleton
     @Provides
@@ -44,18 +57,37 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Singleton
+    @Provides
     fun provideRequestInterceptor(): RequestInterceptor {
         return RequestInterceptor()
     }
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(requestInterceptor: RequestInterceptor): OkHttpClient {
+    fun providesTaskyLoaderImpl(context: Context): TaskyLoader {
+        return TaskyLoaderImpl(context)
+    }
+
+    @Singleton
+    @Provides
+    fun providesTaskyCallStatusImpl(taskyLoader: TaskyLoader, context: Context): TaskyCallStatus {
+        return TaskyCallStatusImpl(taskyLoader, context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(requestInterceptor: RequestInterceptor, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(requestInterceptor)
+            .addInterceptor(httpLoggingInterceptor)
         return httpClient.build()
     }
 }

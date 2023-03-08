@@ -3,15 +3,21 @@ package com.portfolio.tasky.entry.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.entry.usecases.EmailPatternValidator
 import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.models.AuthenticationRequest
+import com.portfolio.tasky.entry.models.AuthenticationResponse
+import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val emailValidator: EmailPatternValidator,
-    private val passwordPatternValidation: PasswordPatternValidation
+    private val passwordPatternValidation: PasswordPatternValidation,
+    private val entryRepository: EntryRepository,
+    private val taskyCallStatus: TaskyCallStatus
 ): ViewModel() {
 
     private val mutableEmail = MutableLiveData(false)
@@ -33,6 +39,9 @@ class LoginViewModel @Inject constructor(
     }
     fun areFieldsValid() {
         mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true
+    }
+    fun makeLoginCall(authenticationModel: AuthenticationRequest) : LiveData<AuthenticationResponse?>{
+        return entryRepository.doLogin(taskyCallStatus, authenticationModel)
     }
 
 }

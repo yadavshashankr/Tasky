@@ -2,6 +2,7 @@ package com.portfolio.tasky.usecases
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.portfolio.tasky.usecases.domain.FragmentInflater
 
 class FragmentInflaterImpl : FragmentInflater {
     private lateinit var fragmentManager: FragmentManager

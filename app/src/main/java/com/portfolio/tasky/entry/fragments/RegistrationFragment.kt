@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,7 +16,10 @@ import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.RegisterViewModel
+import com.portfolio.tasky.entry.models.RegisterRequest
 import com.portfolio.tasky.usecases.*
+import com.portfolio.tasky.usecases.domain.FragmentInflater
+import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +44,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
         setObservers()
         viewBinding.btnReg.setOnClickListener {
-            startLoginFragment()
+            val name = viewBinding.etName.subLayout.etInput.text.toString()
+            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+            viewModel.makeRegistrationCall(RegisterRequest(name, email, password)).observe(viewLifecycleOwner){
+                    it.let {  if(it == true){
+                        Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(activity, "Failure", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
@@ -119,6 +133,10 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
+    /**
+     * Necessary for navigating to LoginFragment.
+     * Currently not called
+     */
     private fun startLoginFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
 

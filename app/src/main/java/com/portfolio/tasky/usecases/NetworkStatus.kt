@@ -1,6 +1,6 @@
 package com.portfolio.tasky.usecases
 
-sealed class NetworkStatus{
+sealed class NetworkStatus(){
     object Available : NetworkStatus()
     object Unavailable : NetworkStatus()
 }

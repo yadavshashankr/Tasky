@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,10 +16,11 @@ import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.LoginViewModel
-import com.portfolio.tasky.usecases.FragmentInflater
+import com.portfolio.tasky.entry.models.AuthenticationRequest
+import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
 import com.portfolio.tasky.usecases.TaskyWatcherImpl
-import com.portfolio.tasky.usecases.TextChanged
+import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +44,14 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
         setObservers()
         viewBinding.btnLogin.setOnClickListener {
-            openRegistrationFragment()
+            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+            viewModel.makeLoginCall(AuthenticationRequest(email, password)).observe(viewLifecycleOwner){
+                it.let {
+                    Toast.makeText(activity, "Token ${it?.token}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -106,7 +115,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             )
         )
     }
-
+    /**
+     * Necessary for navigating to RegistrationFragment.
+     * Currently not called
+     */
     private fun openRegistrationFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
 

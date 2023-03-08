@@ -3,9 +3,12 @@ package com.portfolio.tasky.entry.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.entry.usecases.EmailPatternValidator
 import com.portfolio.tasky.entry.usecases.NameValidation
 import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.models.RegisterRequest
+import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,7 +16,9 @@ import javax.inject.Inject
 class RegisterViewModel  @Inject constructor(
     private val emailValidator: EmailPatternValidator,
     private val passwordPatternValidation: PasswordPatternValidation,
-    private val nameValidation: NameValidation
+    private val nameValidation: NameValidation,
+    private val entryRepository: EntryRepository,
+    private val taskyCallStatus: TaskyCallStatus
 ) : ViewModel() {
 
     private val mutableEmail = MutableLiveData(false)
@@ -41,5 +46,8 @@ class RegisterViewModel  @Inject constructor(
     }
     fun areFieldsValid() {
         mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
+    }
+    fun makeRegistrationCall(registerModel: RegisterRequest) : LiveData<Boolean?>{
+        return entryRepository.doRegistration(taskyCallStatus, registerModel)
     }
 }

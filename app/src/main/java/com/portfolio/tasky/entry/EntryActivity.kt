@@ -16,6 +16,8 @@ import com.portfolio.tasky.entry.fragments.LoginFragment
 import com.portfolio.tasky.entry.viewModels.EntryViewModel
 import com.portfolio.tasky.globals.Constants
 import com.portfolio.tasky.usecases.*
+import com.portfolio.tasky.usecases.domain.FragmentInflater
+import com.portfolio.tasky.usecases.domain.ToolbarHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

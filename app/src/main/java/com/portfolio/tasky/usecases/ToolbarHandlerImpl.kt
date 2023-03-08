@@ -3,6 +3,7 @@ package com.portfolio.tasky.usecases
 import android.view.animation.TranslateAnimation
 import androidx.appcompat.widget.Toolbar
 import com.portfolio.tasky.globals.Constants
+import com.portfolio.tasky.usecases.domain.ToolbarHandler
 
 
 class ToolbarHandlerImpl : ToolbarHandler {
