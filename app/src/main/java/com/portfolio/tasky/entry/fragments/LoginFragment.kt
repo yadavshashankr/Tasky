@@ -48,8 +48,8 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
             viewModel.makeLoginCall(AuthenticationRequest(email, password)).observe(viewLifecycleOwner){
-                it.let {
-                    Toast.makeText(activity, "Token ${it?.token}", Toast.LENGTH_SHORT).show()
+                if(it != null){
+                    Toast.makeText(activity, "Token ${it.token}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
