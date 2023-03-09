@@ -20,14 +20,13 @@ class TaskyCallStatusImpl @Inject constructor(private val taskyLoader: TaskyLoad
     override fun onResponse(responseCode: Int, responseMessage: String) {
         taskyLoader.setLoading(false)
 
-        when (responseCode){
-            in 200..299 -> Toast.makeText(context, "Success\n$responseMessage", Toast.LENGTH_SHORT).show()
-            in 400..599 -> Toast.makeText(context, responseMessage, Toast.LENGTH_SHORT).show()
+        if(responseCode in 400..500){
+            Toast.makeText(context, responseMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onFailure(responseCode: Int, errorMessage: String) {
         taskyLoader.setLoading(false)
-        Toast.makeText(context, "App Call Error", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 }

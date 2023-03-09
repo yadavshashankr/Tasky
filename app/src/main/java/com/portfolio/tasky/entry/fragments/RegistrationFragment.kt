@@ -48,9 +48,9 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             val email = viewBinding.etEmail.subLayout.etInput.text.toString()
             val password = viewBinding.etPassword.subLayout.etInput.text.toString()
             viewModel.makeRegistrationCall(RegisterRequest(name, email, password)).observe(viewLifecycleOwner){
-                    if(it != null && it == true){
-                        Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
-                    }
+                if(it){
+                    Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

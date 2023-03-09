@@ -1,7 +1,6 @@
 package com.portfolio.tasky.entry.di.modules
 
 import com.portfolio.tasky.entry.network.EntryApiCall
-import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.entry.usecases.EmailPatternValidator
 import com.portfolio.tasky.entry.usecases.EmailPatternValidatorImpl
 import com.portfolio.tasky.entry.usecases.NameValidation
@@ -39,11 +38,5 @@ class EntryModules {
         @Singleton
         fun providesEntryApiCall(retrofit: Retrofit): EntryApiCall {
                 return retrofit.create(EntryApiCall::class.java)
-        }
-
-        @Provides
-        @Singleton
-        fun providesEntryRepository(entryApiCall: EntryApiCall): EntryRepository {
-                return EntryRepository(entryApiCall)
         }
 }
