@@ -133,6 +133,7 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         super.onResume()
         setFieldValidations(this)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)

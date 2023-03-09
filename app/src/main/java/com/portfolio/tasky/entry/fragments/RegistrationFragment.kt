@@ -149,6 +149,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         super.onResume()
         setFieldValidations(this)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)
