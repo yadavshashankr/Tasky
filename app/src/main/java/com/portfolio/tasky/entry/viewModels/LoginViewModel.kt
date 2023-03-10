@@ -47,7 +47,7 @@ class LoginViewModel @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
-    suspend fun makeLoginCall(authenticationModel: AuthenticationRequest){
+    suspend fun login(authenticationModel: AuthenticationRequest){
         mutableLogin.postValue(entryRepository.doLogin(authenticationModel))
     }
 }

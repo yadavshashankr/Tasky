@@ -57,7 +57,7 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
             lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler){
-                viewModel.makeLoginCall(AuthenticationRequest(email, password))
+                viewModel.login(AuthenticationRequest(email, password))
             }
 
             viewModel.loginObserver.observe(viewLifecycleOwner){

@@ -55,7 +55,7 @@ class RegisterViewModel  @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
-    suspend fun makeRegistrationCall(registerModel: RegisterRequest){
+    suspend fun registration(registerModel: RegisterRequest){
         mutableRegistration.postValue(entryRepository.doRegistration(registerModel))
     }
 }

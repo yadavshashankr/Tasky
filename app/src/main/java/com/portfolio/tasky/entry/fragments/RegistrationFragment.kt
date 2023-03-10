@@ -55,7 +55,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
             lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-                viewModel.makeRegistrationCall(RegisterRequest(name, email, password))
+                viewModel.registration(RegisterRequest(name, email, password))
             }
 
             viewModel.registrationObserver.observe(viewLifecycleOwner){
