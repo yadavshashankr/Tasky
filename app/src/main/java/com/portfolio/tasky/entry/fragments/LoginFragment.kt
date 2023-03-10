@@ -76,15 +76,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         viewModel.networkObserver.observe(viewLifecycleOwner){
             when(it){
                 NetworkStatus.Available -> {
-                    if(viewModel.validateFields.value == true){
-                        viewBinding.btnLogin.isEnabled = true
-                    }
-
+                    viewBinding.btnLogin.isEnabled = true
                 }
                 NetworkStatus.Unavailable -> {
-                    if(viewModel.validateFields.value == false){
-                        viewBinding.btnLogin.isEnabled = false
-                    }
+                    viewBinding.btnLogin.isEnabled = false
                 }
             }
         }
