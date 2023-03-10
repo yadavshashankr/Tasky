@@ -4,6 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
 import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -13,20 +15,24 @@ import javax.inject.Inject
  */
 class TaskyCallStatusImpl @Inject constructor(private val taskyLoader: TaskyLoader, private val context: Context) : TaskyCallStatus {
 
-    override fun onRequestCallStarted() {
+    override suspend fun onRequestCallStarted() {
         taskyLoader.setLoading(true)
     }
 
-    override fun onResponse(responseCode: Int, responseMessage: String) {
+    override suspend fun onResponse(responseCode: Int, responseMessage: String) {
         taskyLoader.setLoading(false)
 
         if(responseCode in 400..500){
-            Toast.makeText(context, responseMessage, Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main){
+                Toast.makeText(context, responseMessage, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    override fun onFailure(responseCode: Int, errorMessage: String) {
-        taskyLoader.setLoading(false)
-        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+    override suspend fun onFailure(responseCode: Int, errorMessage: String) {
+        withContext(Dispatchers.Main){
+            taskyLoader.setLoading(false)
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 }

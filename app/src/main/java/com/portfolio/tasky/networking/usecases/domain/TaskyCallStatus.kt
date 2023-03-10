@@ -1,9 +1,9 @@
 package com.portfolio.tasky.networking.usecases.domain
 
 interface TaskyCallStatus {
-    fun onRequestCallStarted()
+    suspend fun onRequestCallStarted()
 
-    fun onResponse(responseCode : Int, responseMessage : String)
+    suspend fun onResponse(responseCode : Int, responseMessage : String)
 
-    fun onFailure(responseCode: Int, errorMessage : String)
+    suspend fun onFailure(responseCode: Int, errorMessage : String)
 }

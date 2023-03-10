@@ -19,6 +19,7 @@ import com.portfolio.tasky.entry.viewModels.LoginViewModel
 import com.portfolio.tasky.entry.models.AuthenticationRequest
 import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
+import com.portfolio.tasky.usecases.NetworkStatus
 import com.portfolio.tasky.usecases.TaskyWatcherImpl
 import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
@@ -61,13 +62,31 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnLogin.isEnabled = it == true }
+        }
+
+        viewModel.networkObserver.observe(viewLifecycleOwner){
+            when(it){
+                NetworkStatus.Available -> {
+                    if(viewModel.validateFields.value == true){
+                        viewBinding.btnLogin.isEnabled = true
+                    }
+
+                }
+                NetworkStatus.Unavailable -> {
+                    if(viewModel.validateFields.value == false){
+                        viewBinding.btnLogin.isEnabled = false
+                    }
+                }
+            }
         }
     }
 

@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -35,7 +34,6 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         savedInstanceState: Bundle?
     ): View {
         viewBinding = DataBindingUtil.inflate(inflater, R.layout.layout_registration, container, false)
-        viewBinding.lifecycleOwner = this
         return viewBinding.root
     }
 
@@ -47,9 +45,10 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             val name = viewBinding.etName.subLayout.etInput.text.toString()
             val email = viewBinding.etEmail.subLayout.etInput.text.toString()
             val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
             viewModel.makeRegistrationCall(RegisterRequest(name, email, password)).observe(viewLifecycleOwner){
                 if(it){
-                    Toast.makeText(activity, "Success", Toast.LENGTH_SHORT).show()
+                    startLoginFragment()
                 }
             }
         }
@@ -61,11 +60,13 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.name.observe(viewLifecycleOwner) {
             val etName = viewBinding.etName
             it?.let { isValid -> etName.setValid(isValid)
@@ -74,6 +75,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
         viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnReg.isEnabled = it == true }
+        }
+
+        viewModel.networkObserver.observe(viewLifecycleOwner){
+            when(it){
+                NetworkStatus.Available -> {
+                    viewBinding.btnReg.isEnabled = true
+                }
+                NetworkStatus.Unavailable -> {
+                    viewBinding.btnReg.isEnabled = false
+                }
+            }
         }
     }
 
