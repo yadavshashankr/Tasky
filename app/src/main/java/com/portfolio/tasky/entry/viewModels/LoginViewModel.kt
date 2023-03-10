@@ -31,6 +31,9 @@ class LoginViewModel @Inject constructor(
 
     val networkObserver : LiveData<NetworkStatus> = networkStatus
 
+    private val mutableLogin = MutableLiveData<AuthenticationResponse?>()
+    val loginObserver : LiveData<AuthenticationResponse?> = mutableLogin
+
 
 
     fun onEmailChange(email : String) {
@@ -44,7 +47,7 @@ class LoginViewModel @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
-    fun makeLoginCall(authenticationModel: AuthenticationRequest) : LiveData<AuthenticationResponse?> {
-        return entryRepository.doLogin(authenticationModel)
+    suspend fun makeLoginCall(authenticationModel: AuthenticationRequest){
+        mutableLogin.postValue(entryRepository.doLogin(authenticationModel))
     }
 }

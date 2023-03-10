@@ -36,6 +36,9 @@ class RegisterViewModel  @Inject constructor(
 
     val networkObserver : LiveData<NetworkStatus> = networkStatus
 
+    private val mutableRegistration = MutableLiveData(false)
+    val registrationObserver : LiveData<Boolean> = mutableRegistration
+
 
 
     fun onEmailChange(email : String) {
@@ -52,8 +55,7 @@ class RegisterViewModel  @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
-    fun makeRegistrationCall(registerModel: RegisterRequest) : LiveData<Boolean>{
-        return entryRepository.doRegistration(registerModel)
+    suspend fun makeRegistrationCall(registerModel: RegisterRequest){
+        mutableRegistration.postValue(entryRepository.doRegistration(registerModel))
     }
-
 }
