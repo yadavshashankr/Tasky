@@ -48,7 +48,9 @@ class RegisterViewModel  @Inject constructor(
         mutableName.value = nameValidation.isValidName(name)
     }
     fun areFieldsValid() {
-        mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true && networkObserver.value == NetworkStatus.Available
+        val isNetworkAvailable = networkObserver.value == NetworkStatus.Available
+        val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
+        mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
     fun makeRegistrationCall(registerModel: RegisterRequest) : LiveData<Boolean>{
         return entryRepository.doRegistration(registerModel)

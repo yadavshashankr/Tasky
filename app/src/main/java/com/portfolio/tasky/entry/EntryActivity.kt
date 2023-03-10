@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.ActivityEntryBinding
+import com.portfolio.tasky.entry.fragments.LoginFragment
 import com.portfolio.tasky.entry.fragments.RegistrationFragment
 import com.portfolio.tasky.entry.viewModels.EntryViewModel
 import com.portfolio.tasky.globals.Constants
@@ -69,7 +70,7 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
         setTitle(getString(R.string.welcome_back))
 
         setFragmentManager(supportFragmentManager)
-        val loginFragment = RegistrationFragment.getInstance()
+        val loginFragment = LoginFragment.getInstance()
         inflateFragment(loginFragment, R.id.fragment_container)
     }
 

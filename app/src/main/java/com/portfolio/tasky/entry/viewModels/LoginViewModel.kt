@@ -40,7 +40,9 @@ class LoginViewModel @Inject constructor(
         mutablePassword.value = passwordPatternValidation.isPasswordPatternValid(password)
     }
     fun areFieldsValid() {
-        mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true && networkObserver.value == NetworkStatus.Available
+        val isNetworkAvailable = networkObserver.value == NetworkStatus.Available
+        val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true
+        mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
     fun makeLoginCall(authenticationModel: AuthenticationRequest) : LiveData<AuthenticationResponse?> {
         return entryRepository.doLogin(authenticationModel)
