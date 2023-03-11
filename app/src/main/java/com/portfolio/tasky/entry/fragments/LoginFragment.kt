@@ -6,27 +6,38 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.LoginViewModel
-import com.portfolio.tasky.usecases.FragmentInflater
+import com.portfolio.tasky.entry.models.AuthenticationRequest
+import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
+import com.portfolio.tasky.usecases.NetworkStatus
 import com.portfolio.tasky.usecases.TaskyWatcherImpl
-import com.portfolio.tasky.usecases.TextChanged
+import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged {
     private lateinit var viewBinding: LayoutLoginBinding
 
     private val viewModel: LoginViewModel by viewModels()
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +53,18 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
         setObservers()
         viewBinding.btnLogin.setOnClickListener {
-            openRegistrationFragment()
+            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+            lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler){
+                viewModel.login(AuthenticationRequest(email, password))
+            }
+
+            viewModel.loginObserver.observe(viewLifecycleOwner){
+                if(it != null){
+                    Toast.makeText(activity, "Token ${it.token}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -52,13 +74,26 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnLogin.isEnabled = it == true }
+        }
+
+        viewModel.networkObserver.observe(viewLifecycleOwner){
+            when(it){
+                NetworkStatus.Available -> {
+                    viewBinding.btnLogin.isEnabled = true
+                }
+                NetworkStatus.Unavailable -> {
+                    viewBinding.btnLogin.isEnabled = false
+                }
+            }
         }
     }
 
@@ -106,7 +141,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             )
         )
     }
-
+    /**
+     * Necessary for navigating to RegistrationFragment.
+     * Currently not called
+     */
     private fun openRegistrationFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
 
@@ -121,6 +159,7 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         super.onResume()
         setFieldValidations(this)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)

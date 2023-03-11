@@ -1,4 +1,4 @@
-package com.portfolio.tasky.usecases
+package com.portfolio.tasky.usecases.domain
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

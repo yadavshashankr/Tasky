@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.portfolio.tasky.entry.usecases.EmailPatternValidator
 import com.portfolio.tasky.entry.usecases.NameValidation
 import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.models.RegisterRequest
+import com.portfolio.tasky.entry.repositories.EntryRepository
+import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,7 +16,9 @@ import javax.inject.Inject
 class RegisterViewModel  @Inject constructor(
     private val emailValidator: EmailPatternValidator,
     private val passwordPatternValidation: PasswordPatternValidation,
-    private val nameValidation: NameValidation
+    private val nameValidation: NameValidation,
+    private val entryRepository: EntryRepository,
+    networkStatus: LiveData<NetworkStatus>
 ) : ViewModel() {
 
     private val mutableEmail = MutableLiveData(false)
@@ -29,6 +34,12 @@ class RegisterViewModel  @Inject constructor(
     val validateFields : LiveData<Boolean> = mutableFieldsValid
 
 
+    val networkObserver : LiveData<NetworkStatus> = networkStatus
+
+    private val mutableRegistration = MutableLiveData(false)
+    val registrationObserver : LiveData<Boolean> = mutableRegistration
+
+
 
     fun onEmailChange(email : String) {
         mutableEmail.value = emailValidator.isValidEmailPattern(email)
@@ -40,6 +51,11 @@ class RegisterViewModel  @Inject constructor(
         mutableName.value = nameValidation.isValidName(name)
     }
     fun areFieldsValid() {
-        mutableFieldsValid.value =  mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
+        val isNetworkAvailable = networkObserver.value == NetworkStatus.Available
+        val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
+        mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
+    }
+    suspend fun registration(registerModel: RegisterRequest){
+        mutableRegistration.postValue(entryRepository.doRegistration(registerModel))
     }
 }

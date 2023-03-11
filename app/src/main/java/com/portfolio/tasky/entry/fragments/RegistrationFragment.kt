@@ -10,14 +10,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.RegisterViewModel
+import com.portfolio.tasky.entry.models.RegisterRequest
 import com.portfolio.tasky.usecases.*
+import com.portfolio.tasky.usecases.domain.FragmentInflater
+import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(),
@@ -25,13 +32,16 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     private lateinit var viewBinding: LayoutRegistrationBinding
 
     private val viewModel: RegisterViewModel by viewModels()
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         viewBinding = DataBindingUtil.inflate(inflater, R.layout.layout_registration, container, false)
-        viewBinding.lifecycleOwner = this
         return viewBinding.root
     }
 
@@ -40,7 +50,19 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
         setObservers()
         viewBinding.btnReg.setOnClickListener {
-            startLoginFragment()
+            val name = viewBinding.etName.subLayout.etInput.text.toString()
+            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+            lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+                viewModel.registration(RegisterRequest(name, email, password))
+            }
+
+            viewModel.registrationObserver.observe(viewLifecycleOwner){
+                if(it){
+                    startLoginFragment()
+                }
+            }
         }
     }
 
@@ -50,11 +72,13 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             it?.let { isValid -> emailField.setValid(isValid)
                 emailField.setError(emailField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.password.observe(viewLifecycleOwner) {
             val passwordField = viewBinding.etPassword
             it?.let { isValid -> passwordField.setValid(isValid)
                 passwordField.setError(passwordField.subLayout.etInput.text?.isNotEmpty() == true && !isValid)}
         }
+
         viewModel.name.observe(viewLifecycleOwner) {
             val etName = viewBinding.etName
             it?.let { isValid -> etName.setValid(isValid)
@@ -63,6 +87,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
         viewModel.validateFields.observe(viewLifecycleOwner) {
             it.let {  viewBinding.btnReg.isEnabled = it == true }
+        }
+
+        viewModel.networkObserver.observe(viewLifecycleOwner){
+            when(it){
+                NetworkStatus.Available -> {
+                    viewBinding.btnReg.isEnabled = true
+                }
+                NetworkStatus.Unavailable -> {
+                    viewBinding.btnReg.isEnabled = false
+                }
+            }
         }
     }
 
@@ -119,6 +154,10 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
+    /**
+     * Necessary for navigating to LoginFragment.
+     * Currently not called
+     */
     private fun startLoginFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
 
@@ -134,6 +173,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         super.onResume()
         setFieldValidations(this)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         removeFieldValidations(this)
