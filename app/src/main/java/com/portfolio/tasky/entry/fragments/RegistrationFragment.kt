@@ -5,6 +5,7 @@ import android.text.Editable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(),
-    TextChanged {
+    TextChanged, OnClickListener{
     private lateinit var viewBinding: LayoutRegistrationBinding
 
     private val viewModel: RegisterViewModel by viewModels()
@@ -49,21 +50,13 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
-        viewBinding.btnReg.setOnClickListener {
-            val name = viewBinding.etName.subLayout.etInput.text.toString()
-            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
-            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+        setToolBar()
+        viewBinding.btnReg.setOnClickListener(this)
+    }
 
-            lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-                viewModel.registration(RegisterRequest(name, email, password))
-            }
-
-            viewModel.registrationObserver.observe(viewLifecycleOwner){
-                if(it){
-                    startLoginFragment()
-                }
-            }
-        }
+    private fun setToolBar() {
+        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
+        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
     }
 
     private fun setObservers() {
@@ -154,24 +147,37 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
-    /**
-     * Necessary for navigating to LoginFragment.
-     * Currently not called
-     */
+    override fun onClick(view: View?) {
+        if (view == viewBinding.btnReg){
+            startRegistration()
+        }
+    }
+
+    private fun startRegistration() {
+        val name = viewBinding.etName.subLayout.etInput.text.toString()
+        val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+        val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+        lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            viewModel.registration(RegisterRequest(name, email, password))
+        }
+
+        viewModel.registrationObserver.observe(viewLifecycleOwner){
+            if(it){
+                startLoginFragment()
+            }
+        }
+    }
+
     private fun startLoginFragment() {
-        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
-
-        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
+        (activity as EntryActivity).startFragment(LoginFragment.getInstance())
         removeFragment(this)
-
-        setFragmentManager(activity?.supportFragmentManager!!)
-        val loginFragment = LoginFragment.getInstance()
-        inflateFragment(loginFragment, R.id.fragment_container)
     }
 
     override fun onResume() {
         super.onResume()
         setFieldValidations(this)
+        (activity as EntryActivity).showFAB(R.drawable.fab_back, "viewTag")
     }
 
     override fun onDestroyView() {
@@ -190,4 +196,5 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             return registrationFragment
         }
     }
+
 }

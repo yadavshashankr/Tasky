@@ -5,6 +5,7 @@ import android.text.Editable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -18,6 +19,7 @@ import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.LoginViewModel
 import com.portfolio.tasky.entry.models.AuthenticationRequest
+import com.portfolio.tasky.globals.LoginUtils
 import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
 import com.portfolio.tasky.usecases.NetworkStatus
@@ -30,7 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged {
+class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged, OnClickListener {
     private lateinit var viewBinding: LayoutLoginBinding
 
     private val viewModel: LoginViewModel by viewModels()
@@ -51,21 +53,18 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setToolbar()
         setObservers()
-        viewBinding.btnLogin.setOnClickListener {
-            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
-            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
-            lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler){
-                viewModel.login(AuthenticationRequest(email, password))
-            }
+        (activity as EntryActivity).hideFAB()
 
-            viewModel.loginObserver.observe(viewLifecycleOwner){
-                if(it != null){
-                    Toast.makeText(activity, "Token ${it.token}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        viewBinding.btnLogin.setOnClickListener(this)
+        viewBinding.tvRegister.setOnClickListener(this)
+    }
+
+    private fun setToolbar() {
+        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
+        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
     }
 
     private fun setObservers() {
@@ -141,18 +140,30 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             )
         )
     }
-    /**
-     * Necessary for navigating to RegistrationFragment.
-     * Currently not called
-     */
+
+    private fun startLogin() {
+        val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+        val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+        lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler){
+            viewModel.login(AuthenticationRequest(email, password))
+        }
+
+        viewModel.loginObserver.observe(viewLifecycleOwner){
+            if(it != null){
+                it.token?.let { it1 -> LoginUtils.setAccessToken(it1)}
+                Toast.makeText(activity, "Token ${it.token}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun openRegistrationFragment() {
         (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
-
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
+
+        (activity as EntryActivity).startFragment(RegistrationFragment.getInstance())
         removeFragment(this)
 
-        val registrationFragment = RegistrationFragment.getInstance()
-        inflateFragment(registrationFragment, R.id.fragment_container)
     }
 
     override fun onResume() {
@@ -164,6 +175,15 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         super.onDestroyView()
         removeFieldValidations(this)
     }
+
+    override fun onClick(view: View?) {
+        when(view){
+            viewBinding.tvRegister -> openRegistrationFragment()
+
+            viewBinding.btnLogin ->  startLogin()
+        }
+    }
+
 
     companion object {
         private lateinit var loginFragment : LoginFragment

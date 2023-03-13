@@ -4,14 +4,18 @@ package com.portfolio.tasky.entry
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import android.view.View.OnClickListener
 import android.view.animation.TranslateAnimation
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.ActivityEntryBinding
+import com.portfolio.tasky.entry.fragments.LoginFragment
 import com.portfolio.tasky.entry.fragments.RegistrationFragment
 import com.portfolio.tasky.entry.viewModels.EntryViewModel
 import com.portfolio.tasky.globals.Constants
@@ -21,7 +25,7 @@ import com.portfolio.tasky.usecases.domain.ToolbarHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl() {
+class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl(),  OnClickListener {
     private lateinit var viewBinding: ActivityEntryBinding
     private val viewModel: EntryViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +34,7 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
         viewBinding.lifecycleOwner = this
 
         setObservers()
-        startFragment()
+        startFragment(RegistrationFragment.getInstance())
     }
 
     private fun setObservers() {
@@ -50,6 +54,19 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
         }
     }
 
+    fun showFAB(iconRes : Int, tag : String){
+        viewBinding.fab.setImageResource(iconRes)
+        viewBinding.fab.animate().translationY(0f)
+        viewBinding.fab.tag = tag
+
+        viewBinding.fab.setOnClickListener(this)
+    }
+
+    fun hideFAB(){
+        viewBinding.fab.animate().translationY(resources.getDimension(com.intuit.sdp.R.dimen._200sdp))
+        viewBinding.fab.setOnClickListener(null)
+    }
+
     private fun animate(isAvailable: Boolean) {
         val textField = viewBinding.layoutOnlineMode.tvOnlineMode
         textField.isVisible = true
@@ -65,15 +82,20 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
         }, 3000)
     }
 
-    private fun startFragment() {
+    fun startFragment(fragment : Fragment) {
+        setFragmentManager(supportFragmentManager)
         setTitle(getString(R.string.welcome_back))
 
-        setFragmentManager(supportFragmentManager)
-        val fragment = RegistrationFragment.getInstance()
         inflateFragment(fragment, R.id.fragment_container)
     }
 
     fun setTitle(text: String) {
         setToolBarText(viewBinding.toolbar, text)
+    }
+
+    override fun onClick(view: View?) {
+        if(view == viewBinding.fab && viewBinding.fab.tag == "viewTag"){
+            startFragment(LoginFragment.getInstance())
+        }
     }
 }

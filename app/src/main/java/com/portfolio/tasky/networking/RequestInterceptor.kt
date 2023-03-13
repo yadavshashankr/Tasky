@@ -1,6 +1,6 @@
 package com.portfolio.tasky.networking
 
-import com.portfolio.tasky.BuildConfig
+import com.portfolio.tasky.globals.LoginUtils
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
@@ -13,7 +13,7 @@ class RequestInterceptor @Inject constructor() :
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
         val requestBuilder = original.newBuilder()
-            .header("x-api-key", BuildConfig.api_key)
+            .header("Authorization", LoginUtils.getAccessToken())
         val request = requestBuilder.build()
         return chain.proceed(request)
     }
