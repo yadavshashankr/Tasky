@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.portfolio.tasky.data.NetworkChangeReceiver
-import com.portfolio.tasky.entry.usecases.domain.UserPreferences
+import com.portfolio.tasky.data.RequestInterceptorApiKey
+import com.portfolio.tasky.entry.data.UserPreferences
 import com.portfolio.tasky.globals.Constants
-import com.portfolio.tasky.entry.data.RequestInterceptorImpl
-import com.portfolio.tasky.entry.data.RequestInterceptor
+import com.portfolio.tasky.entry.data.RequestInterceptorAccessToken
 import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
 import com.portfolio.tasky.networking.usecases.TaskyLoaderImpl
 import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
@@ -65,8 +65,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideRequestInterceptor(userPreferences: UserPreferences): RequestInterceptor {
-        return RequestInterceptorImpl(userPreferences)
+    fun provideRequestInterceptorApiKey(): RequestInterceptorApiKey {
+        return RequestInterceptorApiKey()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRequestInterceptorAccessToken(userPreferences: UserPreferences): RequestInterceptorAccessToken {
+        return RequestInterceptorAccessToken(userPreferences)
     }
 
     @Singleton
@@ -83,13 +89,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(requestInterceptor: RequestInterceptor, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkHttpClient(requestInterceptor: RequestInterceptorAccessToken, requestInterceptorApiKey: RequestInterceptorApiKey, httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
             .connectTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(Constants.Companion.ApiProperties.DEFAULT_REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(requestInterceptor)
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(requestInterceptorApiKey)
         return httpClient.build()
     }
 }

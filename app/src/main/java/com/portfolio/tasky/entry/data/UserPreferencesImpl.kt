@@ -1,4 +1,4 @@
-package com.portfolio.tasky.entry.usecases.domain
+package com.portfolio.tasky.entry.data
 
 import android.content.Context
 import com.google.gson.Gson
@@ -10,14 +10,14 @@ class UserPreferencesImpl @Inject constructor(val context: Context) : UserPrefer
 
     private val sharedPreference by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)}
 
-    override fun saveAuthenticatedUser(authenticatedUser: AuthenticationResponse) {
+    override fun saveAuthenticatedUser(authenticatedUser: AuthenticationResponse?) {
         val jsonAuthenticatedUser = Gson().toJson(authenticatedUser)
         sharedPreference.edit().putString("authUser", jsonAuthenticatedUser).apply()
     }
 
     override fun getAuthenticatedUser(): AuthenticationResponse? {
         val authenticatedUserJson = sharedPreference.getString("authUser", "")
-        return if(!authenticatedUserJson.equals("")){
+        return if(!authenticatedUserJson.equals("") && !authenticatedUserJson.equals("null")){
             Gson().fromJson(authenticatedUserJson, AuthenticationResponse::class.java)
         }else{
             AuthenticationResponse("","","")

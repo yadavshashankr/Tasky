@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.portfolio.tasky.entry.usecases.domain.EmailPatternValidator
-import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.domain.EmailPatternValidator
+import com.portfolio.tasky.entry.domain.usecases.PasswordPatternValidation
 import com.portfolio.tasky.entry.models.AuthenticationRequest
 import com.portfolio.tasky.entry.models.AuthenticationResponse
 import com.portfolio.tasky.entry.repositories.EntryRepository
-import com.portfolio.tasky.entry.usecases.domain.UserPreferences
+import com.portfolio.tasky.entry.data.UserPreferences
 import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -59,7 +59,7 @@ class LoginViewModel @Inject constructor(
     fun login(authenticationModel: AuthenticationRequest){
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val authenticatedUser = entryRepository.doLogin(authenticationModel)
-            userPreferences.saveAuthenticatedUser(authenticatedUser as AuthenticationResponse)
+            userPreferences.saveAuthenticatedUser(authenticatedUser)
             mutableLogin.postValue(authenticatedUser)
         }
     }

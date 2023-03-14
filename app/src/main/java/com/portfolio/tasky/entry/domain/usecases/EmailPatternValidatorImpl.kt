@@ -1,7 +1,7 @@
-package com.portfolio.tasky.entry.usecases
+package com.portfolio.tasky.entry.domain.usecases
 
 import android.util.Patterns
-import com.portfolio.tasky.entry.usecases.domain.EmailPatternValidator
+import com.portfolio.tasky.entry.domain.EmailPatternValidator
 import javax.inject.Inject
 import javax.inject.Singleton
 

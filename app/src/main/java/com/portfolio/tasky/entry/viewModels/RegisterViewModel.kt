@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.portfolio.tasky.entry.usecases.domain.EmailPatternValidator
-import com.portfolio.tasky.entry.usecases.NameValidation
-import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import com.portfolio.tasky.entry.domain.EmailPatternValidator
+import com.portfolio.tasky.entry.domain.usecases.NameValidation
+import com.portfolio.tasky.entry.domain.usecases.PasswordPatternValidation
 import com.portfolio.tasky.entry.models.RegisterRequest
 import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.usecases.NetworkStatus
