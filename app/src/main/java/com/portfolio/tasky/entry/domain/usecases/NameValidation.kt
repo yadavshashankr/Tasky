@@ -1,4 +1,4 @@
-package com.portfolio.tasky.entry.usecases
+package com.portfolio.tasky.entry.domain.usecases
 
 import javax.inject.Inject
 

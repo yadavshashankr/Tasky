@@ -5,12 +5,12 @@ import android.text.Editable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
@@ -22,20 +22,14 @@ import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(),
-    TextChanged {
+    TextChanged, OnClickListener{
     private lateinit var viewBinding: LayoutRegistrationBinding
 
     private val viewModel: RegisterViewModel by viewModels()
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        throwable.printStackTrace()
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,21 +43,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
-        viewBinding.btnReg.setOnClickListener {
-            val name = viewBinding.etName.subLayout.etInput.text.toString()
-            val email = viewBinding.etEmail.subLayout.etInput.text.toString()
-            val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+        setToolBarAndFab()
+        viewBinding.btnReg.setOnClickListener(this)
+    }
 
-            lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-                viewModel.registration(RegisterRequest(name, email, password))
-            }
+    private fun setToolBarAndFab() {
+        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
 
-            viewModel.registrationObserver.observe(viewLifecycleOwner){
-                if(it){
-                    startLoginFragment()
-                }
-            }
-        }
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.setTitle((activity as EntryActivity).getString(R.string.create_your_account))
+
+        parentActivity.showFAB(R.drawable.fab_back, "viewTag")
     }
 
     private fun setObservers() {
@@ -154,19 +144,31 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         })
     }
 
-    /**
-     * Necessary for navigating to LoginFragment.
-     * Currently not called
-     */
+    override fun onClick(view: View?) {
+        if (view == viewBinding.btnReg){
+            startRegistration()
+        }
+    }
+
+    private fun startRegistration() {
+        val name = viewBinding.etName.subLayout.etInput.text.toString()
+        val email = viewBinding.etEmail.subLayout.etInput.text.toString()
+        val password = viewBinding.etPassword.subLayout.etInput.text.toString()
+
+        viewModel.register(RegisterRequest(name, email, password))
+
+        viewModel.registrationObserver.observe(viewLifecycleOwner){
+            if(it){
+                startLoginFragment()
+            }
+        }
+    }
+
     private fun startLoginFragment() {
-        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.startFragment(LoginFragment.getInstance())
 
-        setFragmentManager(activity?.supportFragmentManager as FragmentManager)
         removeFragment(this)
-
-        setFragmentManager(activity?.supportFragmentManager!!)
-        val loginFragment = LoginFragment.getInstance()
-        inflateFragment(loginFragment, R.id.fragment_container)
     }
 
     override fun onResume() {
@@ -190,4 +192,5 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
             return registrationFragment
         }
     }
+
 }
