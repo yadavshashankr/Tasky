@@ -43,13 +43,17 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         super.onViewCreated(view, savedInstanceState)
 
         setObservers()
-        setToolBar()
+        setToolBarAndFab()
         viewBinding.btnReg.setOnClickListener(this)
     }
 
-    private fun setToolBar() {
+    private fun setToolBarAndFab() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
-        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
+
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.setTitle((activity as EntryActivity).getString(R.string.create_your_account))
+
+        parentActivity.showFAB(R.drawable.fab_back, "viewTag")
     }
 
     private fun setObservers() {
@@ -170,7 +174,6 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     override fun onResume() {
         super.onResume()
         setFieldValidations(this)
-        (activity as EntryActivity).showFAB(R.drawable.fab_back, "viewTag")
     }
 
     override fun onDestroyView() {

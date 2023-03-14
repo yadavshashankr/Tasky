@@ -44,19 +44,18 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setToolbar()
+        setToolbarAndFab()
         setObservers()
-
-        (activity as EntryActivity).hideFAB()
 
         viewBinding.btnLogin.setOnClickListener(this)
         viewBinding.tvRegister.setOnClickListener(this)
     }
 
-    private fun setToolbar() {
+    private fun setToolbarAndFab() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
         val parentActivity = requireActivity() as EntryActivity
         parentActivity.setTitle(requireContext().getString(R.string.welcome_back))
+        parentActivity.hideFAB()
     }
 
     private fun setObservers() {
