@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.portfolio.tasky.data.NetworkChangeReceiver
+import com.portfolio.tasky.entry.usecases.domain.UserPreferences
 import com.portfolio.tasky.globals.Constants
 import com.portfolio.tasky.networking.RequestInterceptor
 import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
@@ -63,8 +64,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideRequestInterceptor(): RequestInterceptor {
-        return RequestInterceptor()
+    fun provideRequestInterceptor(userPreferences: UserPreferences): RequestInterceptor {
+        return RequestInterceptor(userPreferences)
     }
 
     @Singleton

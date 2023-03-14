@@ -12,14 +12,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
 import com.portfolio.tasky.entry.EntryActivity
 import com.portfolio.tasky.entry.viewModels.LoginViewModel
 import com.portfolio.tasky.entry.models.AuthenticationRequest
-import com.portfolio.tasky.globals.LoginUtils
 import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
 import com.portfolio.tasky.usecases.NetworkStatus
@@ -27,19 +25,12 @@ import com.portfolio.tasky.usecases.TaskyWatcherImpl
 import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), TextChanged, OnClickListener {
     private lateinit var viewBinding: LayoutLoginBinding
 
     private val viewModel: LoginViewModel by viewModels()
-
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        throwable.printStackTrace()
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,7 +55,8 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
     private fun setToolbar() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
-        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.welcome_back))
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.setTitle(requireContext().getString(R.string.welcome_back))
     }
 
     private fun setObservers() {
@@ -145,25 +137,20 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         val email = viewBinding.etEmail.subLayout.etInput.text.toString()
         val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
-        lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler){
-            viewModel.login(AuthenticationRequest(email, password))
-        }
+        viewModel.login(AuthenticationRequest(email, password))
 
         viewModel.loginObserver.observe(viewLifecycleOwner){
             if(it != null){
-                it.token?.let { it1 -> LoginUtils.setAccessToken(it1)}
                 Toast.makeText(activity, "Token ${it.token}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun openRegistrationFragment() {
-        (activity as EntryActivity).setTitle((activity as EntryActivity).getString(R.string.create_your_account))
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
-
-        (activity as EntryActivity).startFragment(RegistrationFragment.getInstance())
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.startFragment(RegistrationFragment.getInstance())
         removeFragment(this)
-
     }
 
     override fun onResume() {

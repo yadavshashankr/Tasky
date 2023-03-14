@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
@@ -23,9 +22,6 @@ import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.domain.TextChanged
 import com.portfolio.tasky.views.TaskyAppCompatEditText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(),
@@ -34,9 +30,6 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
 
     private val viewModel: RegisterViewModel by viewModels()
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
-        throwable.printStackTrace()
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -158,9 +151,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         val email = viewBinding.etEmail.subLayout.etInput.text.toString()
         val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
-        lifecycleScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-            viewModel.registration(RegisterRequest(name, email, password))
-        }
+        viewModel.registration(RegisterRequest(name, email, password))
 
         viewModel.registrationObserver.observe(viewLifecycleOwner){
             if(it){
@@ -170,7 +161,9 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     }
 
     private fun startLoginFragment() {
-        (activity as EntryActivity).startFragment(LoginFragment.getInstance())
+        val parentActivity = requireActivity() as EntryActivity
+        parentActivity.startFragment(LoginFragment.getInstance())
+
         removeFragment(this)
     }
 
