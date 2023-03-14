@@ -155,7 +155,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         val email = viewBinding.etEmail.subLayout.etInput.text.toString()
         val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
-        viewModel.registration(RegisterRequest(name, email, password))
+        viewModel.register(RegisterRequest(name, email, password))
 
         viewModel.registrationObserver.observe(viewLifecycleOwner){
             if(it){

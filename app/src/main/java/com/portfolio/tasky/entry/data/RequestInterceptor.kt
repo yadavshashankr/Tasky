@@ -1,4 +1,4 @@
-package com.portfolio.tasky.networking.domain
+package com.portfolio.tasky.entry.data
 
 import okhttp3.Interceptor
 import okhttp3.Response

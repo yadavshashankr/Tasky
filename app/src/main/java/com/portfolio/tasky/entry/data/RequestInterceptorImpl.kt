@@ -1,7 +1,6 @@
-package com.portfolio.tasky.networking
+package com.portfolio.tasky.entry.data
 
 import com.portfolio.tasky.entry.usecases.domain.UserPreferences
-import com.portfolio.tasky.networking.domain.RequestInterceptor
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException

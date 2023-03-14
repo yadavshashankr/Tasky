@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder
 import com.portfolio.tasky.data.NetworkChangeReceiver
 import com.portfolio.tasky.entry.usecases.domain.UserPreferences
 import com.portfolio.tasky.globals.Constants
-import com.portfolio.tasky.networking.RequestInterceptorImpl
-import com.portfolio.tasky.networking.domain.RequestInterceptor
+import com.portfolio.tasky.entry.data.RequestInterceptorImpl
+import com.portfolio.tasky.entry.data.RequestInterceptor
 import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
 import com.portfolio.tasky.networking.usecases.TaskyLoaderImpl
 import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
