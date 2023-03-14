@@ -8,7 +8,8 @@ import com.google.gson.GsonBuilder
 import com.portfolio.tasky.data.NetworkChangeReceiver
 import com.portfolio.tasky.entry.usecases.domain.UserPreferences
 import com.portfolio.tasky.globals.Constants
-import com.portfolio.tasky.networking.RequestInterceptor
+import com.portfolio.tasky.networking.RequestInterceptorImpl
+import com.portfolio.tasky.networking.domain.RequestInterceptor
 import com.portfolio.tasky.networking.usecases.domain.TaskyLoader
 import com.portfolio.tasky.networking.usecases.TaskyLoaderImpl
 import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
@@ -65,7 +66,7 @@ class AppModule {
     @Singleton
     @Provides
     fun provideRequestInterceptor(userPreferences: UserPreferences): RequestInterceptor {
-        return RequestInterceptor(userPreferences)
+        return RequestInterceptorImpl(userPreferences)
     }
 
     @Singleton

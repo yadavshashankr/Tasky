@@ -17,7 +17,11 @@ class UserPreferencesImpl @Inject constructor(val context: Context) : UserPrefer
 
     override fun getAuthenticatedUser(): AuthenticationResponse? {
         val authenticatedUserJson = sharedPreference.getString("authUser", "")
-        return Gson().fromJson(authenticatedUserJson, AuthenticationResponse::class.java)
+        return if(!authenticatedUserJson.equals("")){
+            Gson().fromJson(authenticatedUserJson, AuthenticationResponse::class.java)
+        }else{
+            AuthenticationResponse("","","")
+        }
     }
 
     override fun clearPreferences() {

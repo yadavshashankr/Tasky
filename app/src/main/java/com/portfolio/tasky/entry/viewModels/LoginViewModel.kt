@@ -60,7 +60,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val authenticatedUser = entryRepository.doLogin(authenticationModel)
             userPreferences.saveAuthenticatedUser(authenticatedUser as AuthenticationResponse)
-            mutableLogin.postValue(entryRepository.doLogin(authenticationModel))
+            mutableLogin.postValue(authenticatedUser)
         }
     }
 }
