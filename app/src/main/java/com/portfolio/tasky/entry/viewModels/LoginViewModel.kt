@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.portfolio.tasky.entry.domain.EmailPatternValidator
 import com.portfolio.tasky.entry.domain.usecases.PasswordPatternValidation
 import com.portfolio.tasky.entry.models.AuthenticationRequest
-import com.portfolio.tasky.entry.models.AuthenticationResponse
 import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.entry.data.UserPreferences
+import com.portfolio.tasky.entry.utils.SecuredPreference
 import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -23,7 +23,8 @@ class LoginViewModel @Inject constructor(
     private val passwordPatternValidation: PasswordPatternValidation,
     private val entryRepository: EntryRepository,
     networkStatus: LiveData<NetworkStatus>,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val securedPreference: SecuredPreference
 ): ViewModel() {
 
     private val mutableEmail = MutableLiveData(false)
@@ -37,8 +38,8 @@ class LoginViewModel @Inject constructor(
 
     val networkObserver : LiveData<NetworkStatus> = networkStatus
 
-    private val mutableLogin = MutableLiveData<AuthenticationResponse?>()
-    val loginObserver : LiveData<AuthenticationResponse?> = mutableLogin
+    private val mutableLogin = MutableLiveData<Boolean?>()
+    val loginObserver : LiveData<Boolean?> = mutableLogin
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
         throwable.printStackTrace()
@@ -56,11 +57,14 @@ class LoginViewModel @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
+
     fun login(authenticationModel: AuthenticationRequest){
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val authenticatedUser = entryRepository.doLogin(authenticationModel)
             userPreferences.saveAuthenticatedUser(authenticatedUser)
-            mutableLogin.postValue(authenticatedUser)
+            securedPreference.setAccessToken(authenticatedUser?.token)
+            authenticatedUser?.token = null
+            mutableLogin.postValue(true)
         }
     }
 }

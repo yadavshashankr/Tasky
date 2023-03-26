@@ -1,6 +1,8 @@
 package com.portfolio.tasky.entry.di.modules
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.portfolio.tasky.R
 import com.portfolio.tasky.entry.network.EntryApiCall
 import com.portfolio.tasky.entry.repositories.EntryRepository
 import com.portfolio.tasky.entry.repositories.EntryRepositoryImpl
@@ -10,6 +12,8 @@ import com.portfolio.tasky.entry.domain.usecases.NameValidation
 import com.portfolio.tasky.entry.domain.usecases.PasswordPatternValidation
 import com.portfolio.tasky.entry.data.UserPreferences
 import com.portfolio.tasky.entry.data.UserPreferencesImpl
+import com.portfolio.tasky.entry.utils.SecuredPreference
+import com.portfolio.tasky.entry.utils.SecuredPreferenceImpl
 import com.portfolio.tasky.networking.usecases.domain.TaskyCallStatus
 import com.portfolio.tasky.usecases.*
 import dagger.Module
@@ -57,5 +61,17 @@ class EntryModules {
         @Singleton
         fun providesUserPreference(@ApplicationContext context: Context): UserPreferences {
                 return UserPreferencesImpl(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+                return context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+        }
+
+        @Provides
+        @Singleton
+        fun provideSecuredPreference(sharedPreferences: SharedPreferences,  context: Context): SecuredPreference {
+                return SecuredPreferenceImpl(sharedPreferences, context)
         }
 }
