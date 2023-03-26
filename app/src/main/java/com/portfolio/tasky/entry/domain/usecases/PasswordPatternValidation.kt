@@ -1,4 +1,4 @@
-package com.portfolio.tasky.entry.usecases
+package com.portfolio.tasky.entry.domain.usecases
 
 import com.portfolio.tasky.globals.Constants.Companion.FieldValidationsProperties.MAX_CHARACTERS_FOR_PASSWORD
 import com.portfolio.tasky.globals.Constants.Companion.FieldValidationsProperties.MIN_CHARACTERS_FOR_PASSWORD

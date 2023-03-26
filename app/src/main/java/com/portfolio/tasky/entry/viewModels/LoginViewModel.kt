@@ -3,13 +3,18 @@ package com.portfolio.tasky.entry.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.portfolio.tasky.entry.usecases.EmailPatternValidator
-import com.portfolio.tasky.entry.usecases.PasswordPatternValidation
+import androidx.lifecycle.viewModelScope
+import com.portfolio.tasky.entry.domain.EmailPatternValidator
+import com.portfolio.tasky.entry.domain.usecases.PasswordPatternValidation
 import com.portfolio.tasky.entry.models.AuthenticationRequest
 import com.portfolio.tasky.entry.models.AuthenticationResponse
 import com.portfolio.tasky.entry.repositories.EntryRepository
+import com.portfolio.tasky.entry.data.UserPreferences
 import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +22,8 @@ class LoginViewModel @Inject constructor(
     private val emailValidator: EmailPatternValidator,
     private val passwordPatternValidation: PasswordPatternValidation,
     private val entryRepository: EntryRepository,
-    networkStatus: LiveData<NetworkStatus>
+    networkStatus: LiveData<NetworkStatus>,
+    private val userPreferences: UserPreferences
 ): ViewModel() {
 
     private val mutableEmail = MutableLiveData(false)
@@ -34,6 +40,9 @@ class LoginViewModel @Inject constructor(
     private val mutableLogin = MutableLiveData<AuthenticationResponse?>()
     val loginObserver : LiveData<AuthenticationResponse?> = mutableLogin
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{ _, throwable ->
+        throwable.printStackTrace()
+    }
 
 
     fun onEmailChange(email : String) {
@@ -47,7 +56,11 @@ class LoginViewModel @Inject constructor(
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true
         mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
     }
-    suspend fun login(authenticationModel: AuthenticationRequest){
-        mutableLogin.postValue(entryRepository.doLogin(authenticationModel))
+    fun login(authenticationModel: AuthenticationRequest){
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val authenticatedUser = entryRepository.doLogin(authenticationModel)
+            userPreferences.saveAuthenticatedUser(authenticatedUser)
+            mutableLogin.postValue(authenticatedUser)
+        }
     }
 }

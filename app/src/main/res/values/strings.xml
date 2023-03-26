@@ -11,4 +11,6 @@
     <string name="welcome_back">Welcome Back!</string>
     <string name="text_online">Online</string>
     <string name="text_offline">Offline</string>
+    <string name="submit">Submit</string>
+    <string name="login_screen_text"><font color='#A1A4B2'>Don’t have an account?</font><font color='#8E97FD'> Sign Up</font></string>
 </resources>
