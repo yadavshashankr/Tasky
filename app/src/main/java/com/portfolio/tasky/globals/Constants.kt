@@ -14,6 +14,7 @@ class Constants {
         object ApiProperties {
             const val URL ="https://tasky.pl-coding.com/"
             const val DEFAULT_REQUEST_TIMEOUT : Long =  400
+            const val ACCESS_TOKEN_KEY = "AccessToken"
         }
     }
 
