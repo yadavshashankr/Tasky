@@ -1,0 +1,22 @@
+package com.portfolio.tasky.usecases
+
+import android.view.animation.TranslateAnimation
+import androidx.appcompat.widget.Toolbar
+import com.portfolio.tasky.globals.Constants
+import com.portfolio.tasky.usecases.domain.ToolbarHandler
+
+
+class ToolbarHandlerImpl : ToolbarHandler {
+    private lateinit var translateAnimation: TranslateAnimation
+
+    override fun setToolBarText(toolbar: Toolbar, text: String) {
+        toolbar.title = text
+        animateDown(toolbar)
+    }
+
+     private fun animateDown(toolbar: Toolbar) {
+        translateAnimation = TranslateAnimation(0f, 0f, Constants.Companion.AnimationProperties.MAX_TRANSLATION_Y, 0f)
+        translateAnimation.duration = Constants.Companion.AnimationProperties.DURATION
+        toolbar.startAnimation(translateAnimation)
+    }
+}
