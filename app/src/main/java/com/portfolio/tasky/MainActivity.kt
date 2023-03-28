@@ -1,4 +1,4 @@
-package com.portfolio.tasky.entry
+package com.portfolio.tasky
 
 
 import android.os.Bundle
@@ -9,11 +9,12 @@ import android.view.View.OnClickListener
 import android.view.animation.TranslateAnimation
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.ActivityEntryBinding
 import com.portfolio.tasky.entry.fragments.LoginFragment
 import com.portfolio.tasky.entry.fragments.RegistrationFragment
@@ -25,7 +26,7 @@ import com.portfolio.tasky.usecases.domain.ToolbarHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl(),  OnClickListener {
+class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl(),  OnClickListener {
     private lateinit var viewBinding: ActivityEntryBinding
     private val viewModel: EntryViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,20 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
                     viewBinding.layoutOnlineMode.tvOnlineMode.text = getString(R.string.text_offline)
                     animate(false)
                 }
+            }
+        }
+    }
+
+    fun setFabLocation(shiftRight : Boolean){
+        if(shiftRight){
+            viewBinding.fab.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                this.startToStart = ConstraintLayout.LayoutParams.UNSET
+                this.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+            }
+        }else{
+            viewBinding.fab.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                this.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                this.endToEnd = ConstraintLayout.LayoutParams.UNSET
             }
         }
     }
@@ -91,6 +106,10 @@ class EntryActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterI
 
     fun setTitle(text: String) {
         setToolBarText(viewBinding.toolbar, text)
+    }
+
+    fun setToolbarHeight(isBig: Boolean) {
+        setToolBarHeight(viewBinding.toolbar, viewBinding.appBar, this, isBig)
     }
 
     override fun onClick(view: View?) {

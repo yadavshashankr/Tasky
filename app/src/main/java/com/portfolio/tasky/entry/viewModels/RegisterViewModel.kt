@@ -60,7 +60,7 @@ class RegisterViewModel  @Inject constructor(
     fun areFieldsValid() {
         val isNetworkAvailable = networkObserver.value == NetworkStatus.Available
         val areFieldsValidated = mutableEmail.value == true && mutablePassword.value == true && mutableName.value == true
-        mutableFieldsValid.value = areFieldsValidated  && isNetworkAvailable
+        mutableFieldsValid.value = areFieldsValidated && isNetworkAvailable
     }
     fun register(registerModel: RegisterRequest){
         viewModelScope.launch (Dispatchers.IO + coroutineExceptionHandler){

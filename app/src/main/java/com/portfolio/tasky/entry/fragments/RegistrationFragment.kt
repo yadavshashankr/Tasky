@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutRegistrationBinding
-import com.portfolio.tasky.entry.EntryActivity
+import com.portfolio.tasky.MainActivity
 import com.portfolio.tasky.entry.viewModels.RegisterViewModel
 import com.portfolio.tasky.entry.models.RegisterRequest
 import com.portfolio.tasky.usecases.*
@@ -50,8 +50,8 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     private fun setToolBarAndFab() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
 
-        val parentActivity = requireActivity() as EntryActivity
-        parentActivity.setTitle((activity as EntryActivity).getString(R.string.create_your_account))
+        val parentActivity = requireActivity() as MainActivity
+        parentActivity.setTitle((activity as MainActivity).getString(R.string.create_your_account))
 
         parentActivity.showFAB(R.drawable.fab_back, "viewTag")
     }
@@ -82,10 +82,10 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         viewModel.networkObserver.observe(viewLifecycleOwner){
             when(it){
                 NetworkStatus.Available -> {
-                    viewBinding.btnReg.isEnabled = true
+                    viewModel.areFieldsValid()
                 }
                 NetworkStatus.Unavailable -> {
-                    viewBinding.btnReg.isEnabled = false
+                    viewModel.areFieldsValid()
                 }
             }
         }
@@ -155,7 +155,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         val email = viewBinding.etEmail.subLayout.etInput.text.toString()
         val password = viewBinding.etPassword.subLayout.etInput.text.toString()
 
-        viewModel.register(RegisterRequest(name, email, password))
+        viewModel.register      (RegisterRequest(name, email, password))
 
         viewModel.registrationObserver.observe(viewLifecycleOwner){
             if(it){
@@ -165,7 +165,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
     }
 
     private fun startLoginFragment() {
-        val parentActivity = requireActivity() as EntryActivity
+        val parentActivity = requireActivity() as MainActivity
         parentActivity.startFragment(LoginFragment.getInstance())
 
         removeFragment(this)
