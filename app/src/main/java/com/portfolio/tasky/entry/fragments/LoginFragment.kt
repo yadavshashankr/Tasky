@@ -140,6 +140,7 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
         viewModel.loginObserver.observe(viewLifecycleOwner){
             val parentActivity = (activity as MainActivity)
+            parentActivity.setToolbarHeight(false)
             parentActivity.startFragment(AgendaFragment.getInstance())
         }
     }

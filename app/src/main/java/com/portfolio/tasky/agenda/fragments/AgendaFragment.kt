@@ -1,12 +1,13 @@
 package com.portfolio.tasky.agenda.fragments
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.transition.Fade
+import androidx.transition.Slide
 import com.portfolio.tasky.MainActivity
 import com.portfolio.tasky.R
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
@@ -28,7 +29,6 @@ class AgendaFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
         val parentActivity = requireActivity() as MainActivity
         parentActivity.setTitle((activity as MainActivity).getString(R.string.create_your_account))
 
-        parentActivity.setToolbarHeight(false)
         parentActivity.showFAB(R.drawable.fab_plus, "dialogTag")
         parentActivity.setFabLocation(true)
     }
@@ -41,7 +41,7 @@ class AgendaFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
         fun getInstance(): AgendaFragment {
             agendaFragment = AgendaFragment()
             agendaFragment.apply {
-                enterTransition = Fade(Fade.IN)
+                enterTransition = Slide(Gravity.BOTTOM)
             }
             return agendaFragment
         }
