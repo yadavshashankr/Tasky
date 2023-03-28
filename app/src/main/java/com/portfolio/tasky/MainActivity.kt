@@ -116,5 +116,9 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
         if(view == viewBinding.fab && viewBinding.fab.tag == "viewTag"){
             startFragment(LoginFragment.getInstance())
         }
+        if(view == viewBinding.fab && viewBinding.fab.tag == "dialogTag"){
+            setToolbarHeight(true)
+            startFragment(LoginFragment.getInstance())
+        }
     }
 }
