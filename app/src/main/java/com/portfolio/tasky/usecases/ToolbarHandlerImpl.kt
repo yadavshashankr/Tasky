@@ -19,7 +19,7 @@ class ToolbarHandlerImpl : ToolbarHandler {
 
     override fun setToolBarHeight(toolbar: Toolbar, appBar: AppBarLayout, context: Context, isBig: Boolean) {
         if(isBig){
-            val va = ValueAnimator.ofInt(context.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt(), context.resources.getDimension(com.intuit.sdp.R.dimen._120sdp).toInt())
+            val va = ValueAnimator.ofInt(context.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt(), context.resources.getDimension(com.intuit.sdp.R.dimen._100sdp).toInt())
             va.duration = Constants.Companion.AnimationProperties.DURATION
             va.addUpdateListener { animation ->
                 val value = animation.animatedValue as Int
@@ -30,7 +30,7 @@ class ToolbarHandlerImpl : ToolbarHandler {
             }
             va.start()
         }else{
-            val va = ValueAnimator.ofInt(context.resources.getDimension(com.intuit.sdp.R.dimen._120sdp).toInt(), context.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt())
+            val va = ValueAnimator.ofInt(context.resources.getDimension(com.intuit.sdp.R.dimen._100sdp).toInt(), context.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt())
             va.duration = Constants.Companion.AnimationProperties.DURATION
             va.addUpdateListener { animation ->
                 val value = animation.animatedValue as Int
