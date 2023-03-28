@@ -2,7 +2,6 @@ package com.portfolio.tasky.entry.fragments
 
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.transition.Slide
 import com.portfolio.tasky.*
 import com.portfolio.tasky.databinding.LayoutLoginBinding
-import com.portfolio.tasky.entry.EntryActivity
+import com.portfolio.tasky.MainActivity
+import com.portfolio.tasky.agenda.fragments.AgendaFragment
 import com.portfolio.tasky.entry.viewModels.LoginViewModel
 import com.portfolio.tasky.entry.models.AuthenticationRequest
 import com.portfolio.tasky.usecases.domain.FragmentInflater
@@ -53,7 +53,7 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
 
     private fun setToolbarAndFab() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
-        val parentActivity = requireActivity() as EntryActivity
+        val parentActivity = requireActivity() as MainActivity
         parentActivity.setTitle(requireContext().getString(R.string.welcome_back))
         parentActivity.hideFAB()
     }
@@ -78,10 +78,10 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         viewModel.networkObserver.observe(viewLifecycleOwner){
             when(it){
                 NetworkStatus.Available -> {
-                    viewBinding.btnLogin.isEnabled = true
+                    viewModel.areFieldsValid()
                 }
                 NetworkStatus.Unavailable -> {
-                    viewBinding.btnLogin.isEnabled = false
+                    viewModel.areFieldsValid()
                 }
             }
         }
@@ -139,13 +139,14 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
         viewModel.login(AuthenticationRequest(email, password))
 
         viewModel.loginObserver.observe(viewLifecycleOwner){
-           Log.v("Login is ", "SUCCESS")
+            val parentActivity = (activity as MainActivity)
+            parentActivity.startFragment(AgendaFragment.getInstance())
         }
     }
 
     private fun openRegistrationFragment() {
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
-        val parentActivity = requireActivity() as EntryActivity
+        val parentActivity = requireActivity() as MainActivity
         parentActivity.startFragment(RegistrationFragment.getInstance())
         removeFragment(this)
     }
@@ -167,7 +168,6 @@ class LoginFragment : Fragment(), FragmentInflater by FragmentInflaterImpl(), Te
             viewBinding.btnLogin ->  startLogin()
         }
     }
-
 
     companion object {
         private lateinit var loginFragment : LoginFragment
