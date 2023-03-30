@@ -12,7 +12,9 @@ import com.portfolio.tasky.MainActivity
 import com.portfolio.tasky.R
 import com.portfolio.tasky.usecases.FragmentInflaterImpl
 import com.portfolio.tasky.usecases.domain.FragmentInflater
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AgendaFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
 
     override fun onCreateView(
@@ -26,10 +28,14 @@ class AgendaFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
         super.onViewCreated(view, savedInstanceState)
         setFragmentManager(activity?.supportFragmentManager as FragmentManager)
 
+        setToolbarAndFab()
+    }
+
+    private fun setToolbarAndFab() {
         val parentActivity = requireActivity() as MainActivity
         parentActivity.setTitle((activity as MainActivity).getString(R.string.create_your_account))
 
-        parentActivity.showFAB(R.drawable.fab_plus, "dialogTag")
+        parentActivity.showFAB(R.drawable.fab_plus, "agendaDialog")
         parentActivity.setFabLocation(true)
     }
 

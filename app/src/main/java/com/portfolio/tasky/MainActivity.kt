@@ -4,9 +4,13 @@ package com.portfolio.tasky
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
+import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +24,9 @@ import com.portfolio.tasky.entry.fragments.LoginFragment
 import com.portfolio.tasky.entry.fragments.RegistrationFragment
 import com.portfolio.tasky.entry.viewModels.EntryViewModel
 import com.portfolio.tasky.globals.Constants
-import com.portfolio.tasky.usecases.*
+import com.portfolio.tasky.usecases.FragmentInflaterImpl
+import com.portfolio.tasky.usecases.NetworkStatus
+import com.portfolio.tasky.usecases.ToolbarHandlerImpl
 import com.portfolio.tasky.usecases.domain.FragmentInflater
 import com.portfolio.tasky.usecases.domain.ToolbarHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterImpl(), ToolbarHandler by ToolbarHandlerImpl(),  OnClickListener {
     private lateinit var viewBinding: ActivityEntryBinding
     private val viewModel: EntryViewModel by viewModels()
+    private lateinit var popUpActionWindow: PopupWindow
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = DataBindingUtil.setContentView(this, R.layout.activity_entry)
@@ -53,6 +60,28 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
                 }
             }
         }
+
+        viewModel.agendaDialogObserver().observe(this) {
+            when (it) {
+                //Agenda Type
+                getString(R.string.task) -> Toast.makeText(this, getString(R.string.task), Toast.LENGTH_SHORT).show()
+                getString(R.string.event) -> Toast.makeText(this, getString(R.string.event), Toast.LENGTH_SHORT).show()
+                getString(R.string.reminder) -> Toast.makeText(this, getString(R.string.reminder), Toast.LENGTH_SHORT).show()
+
+                //Agenda State
+                getString(R.string.open) -> Toast.makeText(this, getString(R.string.open), Toast.LENGTH_SHORT).show()
+                getString(R.string.edit) -> Toast.makeText(this, getString(R.string.edit), Toast.LENGTH_SHORT).show()
+                getString(R.string.delete) -> Toast.makeText(this, getString(R.string.delete), Toast.LENGTH_SHORT).show()
+
+                //Agenda Pre Timers
+                getString(R.string.ten_mins_before) -> Toast.makeText(this, getString(R.string.ten_mins_before), Toast.LENGTH_SHORT).show()
+                getString(R.string.thirty_mins_before) -> Toast.makeText(this, getString(R.string.thirty_mins_before), Toast.LENGTH_SHORT).show()
+                getString(R.string.one_hour_before) -> Toast.makeText(this, getString(R.string.one_hour_before), Toast.LENGTH_SHORT).show()
+                getString(R.string.six_hours_before) -> Toast.makeText(this, getString(R.string.six_hours_before), Toast.LENGTH_SHORT).show()
+                getString(R.string.one_day_before) -> Toast.makeText(this, getString(R.string.one_day_before), Toast.LENGTH_SHORT).show()
+
+            }
+        }
     }
 
     fun setFabLocation(shiftRight : Boolean){
@@ -73,7 +102,6 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
         viewBinding.fab.setImageResource(iconRes)
         viewBinding.fab.animate().translationY(0f)
         viewBinding.fab.tag = tag
-
         viewBinding.fab.setOnClickListener(this)
     }
 
@@ -112,13 +140,32 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
         setToolBarHeight(viewBinding.toolbar, viewBinding.appBar, this, isBig)
     }
 
+    private fun showAgendaPopUp(agenda : Constants.Companion.Agenda){
+        val calculatedHeight: Int
+        val halfScreenWidth: Int
+        val calculatedWidth: Int
+
+        if(agenda is Constants.Companion.AgendaPreTimeParams){
+            calculatedWidth = viewBinding.fab.x.toInt() - resources.getDimension(com.intuit.sdp.R.dimen._165sdp).toInt()
+            calculatedHeight = viewBinding.fab.y.toInt() - resources.getDimension(com.intuit.sdp.R.dimen._255sdp).toInt()
+            halfScreenWidth = resources.displayMetrics.widthPixels / 2 + 60
+        }else{
+            calculatedWidth = viewBinding.fab.x.toInt() - resources.getDimension(com.intuit.sdp.R.dimen._135sdp).toInt()
+            calculatedHeight = viewBinding.fab.y.toInt() - resources.getDimension(com.intuit.sdp.R.dimen._135sdp).toInt()
+            halfScreenWidth = resources.displayMetrics.widthPixels / 2 - 30
+        }
+
+        popUpActionWindow = viewModel.showAgendaDialog(agenda)
+        popUpActionWindow.showAsDropDown(viewBinding.fab, 0, 0, Gravity.END)
+        popUpActionWindow.update(calculatedWidth, calculatedHeight, halfScreenWidth, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
     override fun onClick(view: View?) {
-        if(view == viewBinding.fab && viewBinding.fab.tag == "viewTag"){
+        if(view == viewBinding.fab && viewBinding.fab.tag == "fab"){
             startFragment(LoginFragment.getInstance())
         }
-        if(view == viewBinding.fab && viewBinding.fab.tag == "dialogTag"){
-            setToolbarHeight(true)
-            startFragment(LoginFragment.getInstance())
+        if(view == viewBinding.fab && viewBinding.fab.tag == "agendaDialog"){
+            showAgendaPopUp(Constants.Companion.AgendaType)
         }
     }
 }

@@ -53,7 +53,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         val parentActivity = requireActivity() as MainActivity
         parentActivity.setTitle((activity as MainActivity).getString(R.string.create_your_account))
         parentActivity.setFabLocation(false)
-        parentActivity.showFAB(R.drawable.fab_back, "viewTag")
+        parentActivity.showFAB(R.drawable.fab_back, "fab")
     }
 
     private fun setObservers() {
