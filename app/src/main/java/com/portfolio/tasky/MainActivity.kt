@@ -128,7 +128,6 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
     fun startFragment(fragment : Fragment) {
         setFragmentManager(supportFragmentManager)
         setTitle(getString(R.string.welcome_back))
-
         inflateFragment(fragment, R.id.fragment_container)
     }
 
