@@ -4,7 +4,6 @@ import android.widget.PopupWindow
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.portfolio.tasky.agenda.dialogs.domain.PopUpTaskyListDialog
-import com.portfolio.tasky.globals.Constants
 import com.portfolio.tasky.usecases.NetworkStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class EntryViewModel @Inject constructor(networkStatus: LiveData<NetworkStatus>, private val popUpTaskyListDialog: PopUpTaskyListDialog) : ViewModel() {
     val networkStatusObserver : LiveData<NetworkStatus> = networkStatus
 
-    fun showAgendaDialog(agenda: Constants.Companion.Agenda) : PopupWindow {
+    fun showAgendaDialog(agenda: Any) : PopupWindow {
         return popUpTaskyListDialog.showAgendaDialog(agenda)
     }
 
