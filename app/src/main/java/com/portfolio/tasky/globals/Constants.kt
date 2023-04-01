@@ -19,13 +19,13 @@ class Constants {
             const val ACCESS_TOKEN_KEY = "AccessToken"
         }
 
-        open class Agenda
+//        open class Agenda : Any()
 
-        object AgendaType: Agenda()
+        object AgendaType: Any()
 
-        object AgendaState : Agenda()
+        object AgendaState : Any()
 
-        object AgendaPreTimeParams : Agenda()
+        object AgendaPreTimeParams : Any()
 
 //        object AgendaPreTimeValues {
 //            private const val ONE_MIN = 1000 * 60
