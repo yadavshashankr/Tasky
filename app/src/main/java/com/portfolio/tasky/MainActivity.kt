@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
         setToolBarHeight(viewBinding.toolbar, viewBinding.appBar, this, isBig)
     }
 
-    private fun showAgendaPopUp(agenda : Constants.Companion.Agenda){
+    private fun showAgendaPopUp(agenda : Any){
         val calculatedHeight: Int
         val halfScreenWidth: Int
         val calculatedWidth: Int
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
             startFragment(LoginFragment.getInstance())
         }
         if(view == viewBinding.fab && viewBinding.fab.tag == "agendaDialog"){
-            showAgendaPopUp(Constants.Companion.AgendaType)
+            showAgendaPopUp(Constants.Companion.AgendaPreTimeParams)
         }
     }
 }

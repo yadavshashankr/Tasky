@@ -25,7 +25,7 @@ class PopUpTaskyListDialogImpl @Inject constructor(private var applicationContex
     private var inflater = applicationContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var view: View = inflater.inflate(R.layout.base_list_pop_up_layout, null)
 
-    override fun showAgendaDialog(agenda : Constants.Companion.Agenda) : PopupWindow{
+    override fun showAgendaDialog(agenda : Any) : PopupWindow{
         when(agenda){
             is Constants.Companion.AgendaType -> this.popUpDialogArrayList = getAgendaTypeList()
             is Constants.Companion.AgendaState -> this.popUpDialogArrayList = getAgendaStateList()
