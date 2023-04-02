@@ -33,7 +33,7 @@ class AgendaFragment : Fragment(), FragmentInflater by FragmentInflaterImpl() {
 
     private fun setToolbarAndFab() {
         val parentActivity = requireActivity() as MainActivity
-        parentActivity.setTitle((activity as MainActivity).getString(R.string.create_your_account))
+        parentActivity.setTitle((activity as MainActivity).getString(R.string.welcome))
 
         parentActivity.showFAB(R.drawable.fab_plus, "agendaDialog")
         parentActivity.setFabLocation(true)
