@@ -61,10 +61,12 @@ class LoginViewModel @Inject constructor(
     fun login(authenticationModel: AuthenticationRequest){
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val authenticatedUser = entryRepository.doLogin(authenticationModel)
-            userPreferences.saveAuthenticatedUser(authenticatedUser)
-            securedPreference.setAccessToken(authenticatedUser?.token)
-            authenticatedUser?.token = null
-            mutableLogin.postValue(true)
+            if(authenticatedUser != null){
+                userPreferences.saveAuthenticatedUser(authenticatedUser)
+                securedPreference.setAccessToken(authenticatedUser.token)
+                authenticatedUser.token = null
+                mutableLogin.postValue(true)
+            }
         }
     }
 }

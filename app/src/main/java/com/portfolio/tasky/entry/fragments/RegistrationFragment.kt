@@ -89,6 +89,12 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
                 }
             }
         }
+
+        viewModel.registrationObserver.observe(viewLifecycleOwner){
+            if(it){
+                startLoginFragment()
+            }
+        }
     }
 
     private fun setFieldValidations(registrationFragment: RegistrationFragment?) {
@@ -154,14 +160,7 @@ class RegistrationFragment : Fragment(), FragmentInflater by FragmentInflaterImp
         val name = viewBinding.etName.subLayout.etInput.text.toString()
         val email = viewBinding.etEmail.subLayout.etInput.text.toString()
         val password = viewBinding.etPassword.subLayout.etInput.text.toString()
-
-        viewModel.register      (RegisterRequest(name, email, password))
-
-        viewModel.registrationObserver.observe(viewLifecycleOwner){
-            if(it){
-                startLoginFragment()
-            }
-        }
+        viewModel.register(RegisterRequest(name, email, password))
     }
 
     private fun startLoginFragment() {
