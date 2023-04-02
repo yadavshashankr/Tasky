@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity(), FragmentInflater by FragmentInflaterIm
             startFragment(LoginFragment.getInstance())
         }
         if(view == viewBinding.fab && viewBinding.fab.tag == "agendaDialog"){
-            showAgendaPopUp(Constants.Companion.AgendaPreTimeParams)
+            showAgendaPopUp(Constants.Companion.AgendaType)
         }
     }
 }
